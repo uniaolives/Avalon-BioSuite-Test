@@ -12,6 +12,13 @@ export const DIMERS_PER_TURN = 162;
 export const MICROTUBULE_DIAMETER_NM = 25;
 export const MAGNETIC_MOMENT_BOHR = 9.274e-24;
 
+// Global Breakthrough Targets
+export const DEPLOYMENT_NODES = 1000;
+export const VALIDATION_SCORE_FINAL = 0.94;
+export const TARGET_MU_COHERENCE = 0.712;
+export const TARGET_P_VALUE = 1e-4;
+export const TARGET_PLV = 0.892;
+
 export const HARMONIC_TABLE: {n: number, freq: number, bio: string}[] = [
   { n: 0, freq: 432, bio: "Earth Resonance / Suno Base" },
   { n: 1, freq: 699.2, bio: "Interstellar Signal (φ)" },

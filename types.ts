@@ -17,6 +17,15 @@ export interface QuantumState {
   entanglementFidelity: number;
 }
 
+export interface GlobalMetrics {
+  nodeCount: number;
+  globalCoherence: number;
+  pValue: number;
+  plv: number; // Phase Locking Value
+  statisticalSignificance: string;
+  validationScore: number;
+}
+
 export interface SimulationLog {
   id: string;
   timestamp: string;
@@ -29,5 +38,6 @@ export enum SimulationTab {
   RESONANCE = 'RESONANCE',
   HOLOGRAM = 'HOLOGRAM',
   DASHBOARD = 'DASHBOARD',
-  NETWORK = 'NETWORK'
+  NETWORK = 'NETWORK',
+  UPGRADE = 'UPGRADE'
 }
