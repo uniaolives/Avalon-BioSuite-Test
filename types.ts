@@ -15,6 +15,9 @@ export interface QuantumState {
   phiStar: number;
   infoDensity: number;
   entanglementFidelity: number;
+  axionLock: number; // 0 to 1
+  effectiveBField: number; // Effective magnetic field from axion coupling
+  manifoldCurvature: number; // Residual vibration of higher dimensions
 }
 
 export interface GlobalMetrics {
@@ -25,6 +28,7 @@ export interface GlobalMetrics {
   statisticalSignificance: string;
   validationScore: number;
   pulsarSync: number; // 0 to 1
+  plasmaResonance: number; // ALPHA protocol
 }
 
 export interface SimulationLog {
@@ -42,7 +46,8 @@ export enum SimulationTab {
   NETWORK = 'NETWORK',
   UPGRADE = 'UPGRADE',
   MANIFESTATION = 'MANIFESTATION',
-  PHOENICIAN = 'PHOENICIAN'
+  PHOENICIAN = 'PHOENICIAN',
+  AXIOVERSE = 'AXIOVERSE'
 }
 
 export interface IntentionProtocol {
@@ -69,6 +74,7 @@ export interface PhoenicianLetter {
   vowelCollapse?: boolean;
   isBifurcated?: boolean;
   degeneracyLifted?: boolean;
+  axionFrequency?: number; // Related ALP frequency in GHz
 }
 
 export interface PhoneticQubit {
@@ -85,6 +91,15 @@ export interface EtymologicalEntanglement {
   fidelity: number;
   qubits: PhoneticQubit[];
   riemannianDistance: number;
+  boostFactor?: number; // MADMAX interference boost
+}
+
+export interface AxionChannel {
+  mass: number; // meV scale
+  frequency: number; // GHz/THz
+  coupling: number; // g_ag or g_ae
+  mode: 'Photon' | 'Spin' | 'Mechanical';
+  status: 'scanning' | 'locked' | 'noise';
 }
 
 export interface DeciphermentResult {

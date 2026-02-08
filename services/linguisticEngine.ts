@@ -91,13 +91,11 @@ export class LinguisticEngine {
       const isVowel = letter?.vowelCollapse || false;
       const isBifurcated = letter?.isBifurcated || false;
       
-      // Riemannian Metric Calculation: Distance between Phoenician origin and Greek measured state
       const originPoint = this.getArticulationPoint(glyph);
       const measuredPoint = isVowel ? this.articulationMap['vocalic'] : originPoint;
       const delta = Math.abs(measuredPoint - originPoint);
       cumulativeRiemannianDistance += delta * (1 / PHI);
 
-      // Coherence time models the duration of phonetic ambiguity before measurement
       const baseTime = isVowel ? 161.8 : 432;
       const noise = Math.random() * 50;
       
@@ -111,18 +109,20 @@ export class LinguisticEngine {
     });
 
     const fidelity = this.calculateEtymologicalFidelity(qubits);
+    // MADMAX Boost Factor integrated as Constructive Etymological Interference
+    const boostFactor = (fidelity * 100) / PHI;
 
     return {
       origin: phoenicianText,
       descendant: text.toUpperCase(),
       fidelity,
       qubits,
-      riemannianDistance: cumulativeRiemannianDistance
+      riemannianDistance: cumulativeRiemannianDistance,
+      boostFactor
     };
   }
 
   private static getArticulationPoint(glyph: string): number {
-    // Mapping specific glyphs to their specified articulation manifold values
     const letter = PHOENICIAN_ALPHABET.find(l => l.glyph === glyph);
     if (!letter) return 3.5;
     
@@ -140,7 +140,6 @@ export class LinguisticEngine {
     if (qubits.length === 0) return 0;
     const collapsedCount = qubits.filter(q => q.isCollapsed).length;
     const stabilitySum = qubits.reduce((acc, q) => acc + (q.coherenceTime / 500), 0);
-    // Fidelity formula integrating stability, collapse state, and PHI coherence
     return Math.min(1.0, (collapsedCount / qubits.length) * (stabilitySum / qubits.length) * (PHI / 1.618));
   }
 
