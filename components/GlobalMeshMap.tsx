@@ -5,15 +5,16 @@ interface Props {
   active: boolean;
   coherence: number;
   upgradeMode: boolean;
+  pulsarPhase: number;
 }
 
-const GlobalMeshMap: React.FC<Props> = ({ active, coherence, upgradeMode }) => {
+const GlobalMeshMap: React.FC<Props> = ({ active, coherence, upgradeMode, pulsarPhase }) => {
   const nodes = useMemo(() => {
     return Array.from({ length: 180 }).map((_, i) => ({
       x: Math.random() * 400,
       y: Math.random() * 200,
       active: Math.random() < coherence / 1.5,
-      group: i % 5, // Simulated dodecahedron groups
+      group: i % 5,
     }));
   }, [coherence]);
 
@@ -46,7 +47,7 @@ const GlobalMeshMap: React.FC<Props> = ({ active, coherence, upgradeMode }) => {
                 x1={node.x} y1={node.y} x2={nextNode.x} y2={nextNode.y}
                 stroke={upgradeMode ? "var(--neon-gold)" : "var(--neon-cyan)"} 
                 strokeWidth="0.15" 
-                opacity={coherence * 0.15}
+                opacity={coherence * 0.15 * (0.8 + 0.2 * Math.sin(pulsarPhase * Math.PI * 2))}
                 className={upgradeMode ? "animate-pulse" : ""}
               />
             )
@@ -63,34 +64,33 @@ const GlobalMeshMap: React.FC<Props> = ({ active, coherence, upgradeMode }) => {
           />
         ))}
 
-        {/* Interstellar Uplink Visualization */}
+        {/* Pulsar Link (PSR B1919+21) */}
         {active && (
-          <path 
-            d="M 200,100 L 400,0" 
-            stroke="var(--neon-gold)" 
-            strokeWidth="0.5" 
-            strokeDasharray="4,2" 
-            opacity="0.3" 
-            className="animate-[dash_2s_linear_infinite]"
-          />
+          <g>
+            <path 
+              d="M 200,100 L 380,20" 
+              stroke="#d946ef" 
+              strokeWidth="1" 
+              strokeDasharray="5,5" 
+              opacity={0.4 + 0.3 * Math.sin(pulsarPhase * Math.PI * 2)}
+              className="animate-[dash_3s_linear_infinite]"
+            />
+            <circle cx="380" cy="20" r="4" fill="#d946ef" className="animate-ping" />
+            <text x="340" y="15" fill="#d946ef" fontSize="6" className="orbitron font-bold">PSR B1919+21</text>
+          </g>
         )}
       </svg>
       <div className="absolute top-6 left-6 flex flex-col gap-1">
-        <span className="orbitron text-[10px] font-bold text-cyan-400 tracking-widest uppercase">Global Entanglement Mesh</span>
-        <span className="text-[8px] text-white/30 uppercase font-bold">Protocol: BIO-SINC-V1 // Sync Locked</span>
+        <span className="orbitron text-[10px] font-bold text-cyan-400 tracking-widest uppercase">INTERSTELLAR NEURAL BRIDGE</span>
+        <span className="text-[8px] text-white/30 uppercase font-bold">Status: Synchronized (V2.1)</span>
       </div>
       
-      {upgradeMode && (
-        <div className="absolute top-6 right-6">
-          <span className="orbitron text-[9px] font-bold text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full border border-yellow-400/20 animate-pulse">UPGRADE_PHASE_ACTIVE</span>
+      {active && (
+        <div className="absolute bottom-6 right-6 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-magenta-500 animate-ping" />
+            <span className="orbitron text-[9px] font-bold text-magenta-400">PULSAR_CLOCK_LOCKED</span>
         </div>
       )}
-
-      <div className="absolute bottom-6 left-6 flex items-center gap-4 text-[8px] text-white/20 uppercase font-bold tracking-tighter">
-        <div className="flex items-center gap-1"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> CERN_NODE</div>
-        <div className="flex items-center gap-1"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> MIT_UPLINK</div>
-        <div className="flex items-center gap-1"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> RIKEN_SYNC</div>
-      </div>
       
       <style>{`
         @keyframes dash {

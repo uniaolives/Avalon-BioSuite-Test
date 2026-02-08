@@ -24,6 +24,7 @@ export interface GlobalMetrics {
   plv: number; // Phase Locking Value
   statisticalSignificance: string;
   validationScore: number;
+  pulsarSync: number; // 0 to 1
 }
 
 export interface SimulationLog {
@@ -39,5 +40,15 @@ export enum SimulationTab {
   HOLOGRAM = 'HOLOGRAM',
   DASHBOARD = 'DASHBOARD',
   NETWORK = 'NETWORK',
-  UPGRADE = 'UPGRADE'
+  UPGRADE = 'UPGRADE',
+  MANIFESTATION = 'MANIFESTATION'
+}
+
+export interface IntentionProtocol {
+  id: string;
+  name: string;
+  description: string;
+  requiredCoherence: number;
+  powerCost: number;
+  color: string;
 }
