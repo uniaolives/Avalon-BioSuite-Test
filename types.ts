@@ -41,7 +41,8 @@ export enum SimulationTab {
   DASHBOARD = 'DASHBOARD',
   NETWORK = 'NETWORK',
   UPGRADE = 'UPGRADE',
-  MANIFESTATION = 'MANIFESTATION'
+  MANIFESTATION = 'MANIFESTATION',
+  PHOENICIAN = 'PHOENICIAN'
 }
 
 export interface IntentionProtocol {
@@ -51,4 +52,26 @@ export interface IntentionProtocol {
   requiredCoherence: number;
   powerCost: number;
   color: string;
+}
+
+export interface PhoenicianLetter {
+  position: number;
+  name: string;
+  glyph: string;
+  phonetic: string;
+  value: number;
+  meaning: string;
+  greek: string;
+  latin: string;
+  arabic: string;
+  hebrew: string;
+  evolutionNote?: string;
+  vowelCollapse?: boolean;
+}
+
+export interface DeciphermentResult {
+  modern: string;
+  phoenician: string;
+  resonanceScore: number;
+  lineage: string;
 }
