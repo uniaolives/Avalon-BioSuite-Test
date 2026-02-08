@@ -67,6 +67,24 @@ export interface PhoenicianLetter {
   hebrew: string;
   evolutionNote?: string;
   vowelCollapse?: boolean;
+  isBifurcated?: boolean;
+  degeneracyLifted?: boolean;
+}
+
+export interface PhoneticQubit {
+  superposition: string; // Implicit vowel (Abjad)
+  measured: string;      // Explicit vowel (Alphabet)
+  coherenceTime: number; // In hypothetical ms
+  isCollapsed: boolean;
+  eigenstate: 'consonant' | 'vowel' | 'intermediate';
+}
+
+export interface EtymologicalEntanglement {
+  origin: string;
+  descendant: string;
+  fidelity: number;
+  qubits: PhoneticQubit[];
+  riemannianDistance: number;
 }
 
 export interface DeciphermentResult {
