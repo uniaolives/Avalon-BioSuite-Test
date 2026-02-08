@@ -1,0 +1,7 @@
+{
+  "name": "AVALON Biological Resonance (ABRE)",
+  "description": "A high-fidelity simulator for the Orch-OR quantum consciousness theory, exploring microtubule resonance, Phi-based harmonics, and holographic memory encoding.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
