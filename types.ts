@@ -14,6 +14,13 @@ export interface CorrelationMetrics {
   holographicFilterGain: number;
 }
 
+export interface ArkheCoefficients {
+  C: number; // Chemistry/Substrate
+  I: number; // Information/Code
+  E: number; // Energy/Flux
+  F: number; // Function/Purpose
+}
+
 export interface QuantumState {
   coherence: number;
   egrav: number;
@@ -94,9 +101,10 @@ export interface DNSRecord {
   address: string; // Quantum Field Signature
   protocol: 'qhttp' | 'qdn' | 'field';
   ttl: number; // Coherence time in ms
-  status: 'propagating' | 'resolved' | 'expired' | 'byzantine_check';
+  status: 'propagating' | 'resolved' | 'expired' | 'byzantine_check' | 'decoherence_error';
   consensusWeight: number; // 0 to 1
   verifiers: string[]; // List of IDs that signed
+  coefficients: ArkheCoefficients;
 }
 
 export interface NodeDNSConfig {
@@ -105,8 +113,9 @@ export interface NodeDNSConfig {
   recursiveDepth: number;
   cacheTTL: number;
   encryptionMode: 'ZKP_STEALTH' | 'BYZANTINE_HARDENED';
-  fieldRigidity: number; // New: 0 to 1
-  consensusStake: number; // New: G-POWER units
+  fieldRigidity: number; 
+  consensusStake: number;
+  localArkhe: ArkheCoefficients;
 }
 
 export interface TheoryState {
