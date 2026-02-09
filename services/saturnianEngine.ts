@@ -50,7 +50,9 @@ export class SaturnianEngine {
       recordingStatus: 'IDLE',
       arkheInfo: 2.55,
       criticalFrequency: 5.87e5,
-      transmissionRange: 1000
+      transmissionRange: 1000,
+      // Fix: Added missing required property xiArkhe
+      xiArkhe: 0.85
     };
   }
 }

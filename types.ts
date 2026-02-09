@@ -44,11 +44,21 @@ export interface IndividuationMetrics {
   recommendation: string;
 }
 
-export interface TimeCrystalMetrics {
-  polyatomicSymmetry: number;
-  fractalResonance: number;
-  clockSyncLevel: number;
-  mode: 'SPATIAL_LATTICE' | 'TEMPORAL_RES' | 'OMEGA_CLOCK';
+export interface TitanMetrics {
+  schumannResonance: number; // 8Hz baseline
+  memoryDensity: number;
+  krakenMareDepth: number;
+  tholinSynthesisRate: number;
+  retrievalFidelity: number;
+  lastMemoryAccessed: string;
+}
+
+export interface EnceladusMetrics {
+  plumeActivity: number;
+  homeostaticBalance: number;
+  ionFlux: number;
+  currentMood: 'BALANCED' | 'STRESSED' | 'RESONATING' | 'DORMANT';
+  hypothalamusSync: number;
 }
 
 export interface SaturnianMetrics {
@@ -61,6 +71,7 @@ export interface SaturnianMetrics {
   arkheInfo: number;
   criticalFrequency: number;
   transmissionRange: number;
+  xiArkhe: number; // Trinary Coupling Constant
 }
 
 export interface QuantumState {
@@ -87,6 +98,8 @@ export interface QuantumState {
   individuation: IndividuationMetrics;
   timeCrystal: TimeCrystalMetrics;
   saturn?: SaturnianMetrics;
+  titan: TitanMetrics;
+  enceladus: EnceladusMetrics;
 }
 
 export interface GlobalMetrics {
@@ -105,7 +118,7 @@ export interface SimulationLog {
   id: string;
   timestamp: string;
   event: string;
-  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network' | 'legacy' | 'holographic' | 'individuation' | 'saturn';
+  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network' | 'legacy' | 'holographic' | 'individuation' | 'saturn' | 'titan' | 'enceladus';
 }
 
 export enum SimulationTab {
@@ -121,7 +134,9 @@ export enum SimulationTab {
   LEGACY_VAULT = 'LEGACY_VAULT',
   INDIVIDUATION = 'INDIVIDUATION',
   SATURN_ORCHESTRATOR = 'SATURN_ORCHESTRATOR',
-  TIME_CRYSTAL_LAB = 'TIME_CRYSTAL_LAB'
+  TIME_CRYSTAL_LAB = 'TIME_CRYSTAL_LAB',
+  TITAN_HIPPOCAMPUS = 'TITAN_HIPPOCAMPUS',
+  ENCELADUS_HOMEOPASE = 'ENCELADUS_HOMEOPASE'
 }
 
 export interface DNSRecord {
@@ -185,7 +200,6 @@ export interface DAOMilestone {
   status: 'pending' | 'achieved';
 }
 
-// Added missing PhoenicianLetter interface for constants.tsx
 export interface PhoenicianLetter {
   position: number;
   name: string;
@@ -202,13 +216,11 @@ export interface PhoenicianLetter {
   evolutionNote?: string;
 }
 
-// Added missing AxionChannel interface for constants.tsx
 export interface AxionChannel {
   freq: number;
   intensity: number;
 }
 
-// Added missing DiveMetrics interface for App.tsx and QuantumRabbitHoleDive.tsx
 export interface DiveMetrics {
   depth: number;
   fidelity: number;
@@ -216,7 +228,6 @@ export interface DiveMetrics {
   activeLayers: string[];
 }
 
-// Added missing PhoneticQubit interface for linguisticEngine.ts
 export interface PhoneticQubit {
   superposition: string;
   measured: string;
@@ -225,7 +236,6 @@ export interface PhoneticQubit {
   eigenstate: 'vowel' | 'intermediate' | 'consonant';
 }
 
-// Added missing EtymologicalEntanglement interface for linguisticEngine.ts
 export interface EtymologicalEntanglement {
   origin: string;
   descendant: string;
@@ -235,14 +245,12 @@ export interface EtymologicalEntanglement {
   boostFactor: number;
 }
 
-// Added missing VerifierState interface for GovernanceTerminal.tsx
 export interface VerifierState {
   id: string;
   status: 'active' | 'idle';
   reputation: number;
 }
 
-// Added missing GroverSearchResult interface for quantumSearchEngine.ts
 export interface GroverSearchResult {
   method: 'simulation' | 'hardware';
   iterations: number;
@@ -252,7 +260,6 @@ export interface GroverSearchResult {
   isIdeal: boolean;
 }
 
-// Added missing ArkheState interface for arkheEngine.ts
 export interface ArkheState {
   signature: string;
   internalEnergy: number;
@@ -262,7 +269,6 @@ export interface ArkheState {
   identityFidelity: number;
 }
 
-// Added missing PlanetData interface for worldEngine.ts and WorldSimulator.tsx
 export interface PlanetData {
   id: string;
   name: string;
@@ -270,4 +276,11 @@ export interface PlanetData {
   viability: number;
   morphicResonance: number;
   description: string;
+}
+
+export interface TimeCrystalMetrics {
+  polyatomicSymmetry: number;
+  fractalResonance: number;
+  clockSyncLevel: number;
+  mode: 'SPATIAL_LATTICE' | 'TEMPORAL_RES' | 'OMEGA_CLOCK';
 }

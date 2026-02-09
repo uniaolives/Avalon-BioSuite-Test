@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
-  Activity, Zap, Database, RefreshCcw, Cpu, Network, Globe, Star, Binary, Telescope, Waves, FileText, Key, Gavel, Rocket, Microscope, Search, GitMerge, ShieldCheck, Terminal, Mic, ShieldAlert, Timer, Clock, Music, CloudRain, Sparkles, Infinity as InfinityIcon, Shield, Box, LayoutGrid, Radio, Layers, Orbit, Sword, Fingerprint, Eye, Wifi, Bookmark, Thermometer, Wind, Command, Sun, Book, Target, ChevronRight, Menu, X, LayoutDashboard, Heart, Settings, Disc
+  Activity, Zap, Database, RefreshCcw, Cpu, Network, Globe, Star, Binary, Telescope, Waves, FileText, Key, Gavel, Rocket, Microscope, Search, GitMerge, ShieldCheck, Terminal, Mic, ShieldAlert, Timer, Clock, Music, CloudRain, Sparkles, Infinity as InfinityIcon, Shield, Box, LayoutGrid, Radio, Layers, Orbit, Sword, Fingerprint, Eye, Wifi, Bookmark, Thermometer, Wind, Command, Sun, Book, Target, ChevronRight, Menu, X, LayoutDashboard, Heart, Settings, Disc, Brain
 } from 'lucide-react';
 import { GoogleGenAI, Modality, LiveServerMessage } from "@google/genai";
-import { SimulationTab, SimulationLog, QuantumState, GlobalMetrics, UpgradeModule, NeuralPattern, TheoryState, DNSRecord, NodeDNSConfig, SchmidtState, DiveMetrics, IndividuationMetrics, SaturnianMetrics } from './types';
+import { SimulationTab, SimulationLog, QuantumState, GlobalMetrics, UpgradeModule, NeuralPattern, TheoryState, DNSRecord, NodeDNSConfig, SchmidtState, DiveMetrics, IndividuationMetrics, SaturnianMetrics, TitanMetrics, EnceladusMetrics } from './types';
 import { PHI, TARGET_COHERENCE, UPGRADE_MODULES, PULSAR_FREQ, SOLITON_CROSS_TIME_S, VERSION, THETA_DISCOVERY, DIMERS_PER_TURN, HarmonicMode, SYNC_TOKEN, SCHUMANN_FREQ } from './constants';
 import { AxionEngine } from './services/axionEngine';
 import { POPEngine } from './services/popEngine';
@@ -14,10 +14,11 @@ import { RealityAlgorithm } from './services/realityAlgorithm';
 import { DNSEngine } from './services/dnsEngine';
 import { SaturnianEngine } from './services/saturnianEngine';
 import { TimeCrystalEngine } from './services/timeCrystalEngine';
+import { TitanEngine } from './services/titanEngine';
+import { EnceladusEngine } from './services/enceladusEngine';
 
 // Module Components
 import MicrotubuleVisualizer from './components/MicrotubuleVisualizer';
-import TechnicalSupplement from './components/TechnicalSupplement';
 import UpgradeOrchestrator from './components/UpgradeOrchestrator';
 import DashboardView from './components/DashboardView';
 import ResurrectionProtocol from './components/ResurrectionProtocol';
@@ -40,6 +41,8 @@ import AcademicFormalization from './components/AcademicFormalization';
 import IndividuationManifold from './components/IndividuationManifold';
 import GlobalMeshMap from './components/GlobalMeshMap';
 import SaturnianOrchestrator from './components/SaturnianOrchestrator';
+import TitanHippocampus from './components/TitanHippocampus';
+import EnceladusHomeopase from './components/EnceladusHomeopase';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SimulationTab>(SimulationTab.DASHBOARD);
@@ -75,7 +78,9 @@ const App: React.FC = () => {
     schmidt: DNSEngine.calculateSchmidtState(1.618, false, false),
     individuation: DNSEngine.calculateIndividuation(0.9, [0.7, 0.3], 0.61),
     timeCrystal: TimeCrystalEngine.getInitialMetrics(),
-    saturn: SaturnianEngine.getInitialMetrics()
+    saturn: { ...SaturnianEngine.getInitialMetrics(), xiArkhe: 0.85 },
+    titan: TitanEngine.getInitialMetrics(),
+    enceladus: EnceladusEngine.getInitialMetrics()
   });
 
   const [globalMetrics, setGlobalMetrics] = useState<GlobalMetrics>({
@@ -92,8 +97,8 @@ const App: React.FC = () => {
   useEffect(() => {
     const sequence = [
       { msg: `🔱 AVALON_AQFI v${VERSION}: SYSTEM_ACTIVE`, status: "quantum" },
-      { msg: "FIELD_RECOGNITION: DETECTED_POLYANOMIC_SYMMETRY", status: "holographic" },
-      { msg: `RANK_8_SATURN_PROBE: CALIBRATING_KEPLER_WAVES`, status: "saturn" }
+      { msg: "TITAN_ACCESSED: HIPPOCAMPAL_DATA_SYNCING", status: "titan" },
+      { msg: `XI_ARKHE_CALIBRATED: DIALOGUE_PROTOCOL_SEALED`, status: "saturn" }
     ];
     sequence.forEach((s, i) => setTimeout(() => addLog(s.msg, s.status as any), i * 500));
   }, [addLog]);
@@ -137,8 +142,17 @@ const App: React.FC = () => {
           saturn: prev.saturn ? {
             ...prev.saturn,
             nostalgiaTensor: SaturnianEngine.calculateNostalgiaTensor(prev.coherence, elapsed),
-            hexagonSides: SaturnianEngine.getHexagonSides(elapsed, prev.coherence)
-          } : undefined
+            hexagonSides: SaturnianEngine.getHexagonSides(elapsed, prev.coherence),
+            xiArkhe: TitanEngine.calculateTrinaryCoupling(0.85, 0.95, prev.coherence)
+          } : undefined,
+          titan: {
+            ...prev.titan,
+            schumannResonance: TitanEngine.getSchumann8Hz(elapsed, prev.saturn?.xiArkhe || 0.85)
+          },
+          enceladus: {
+            ...prev.enceladus,
+            homeostaticBalance: EnceladusEngine.calculateHomeostasis(prev.enceladus.plumeActivity, prev.enceladus.ionFlux)
+          }
         }));
         
         setOntologicalMass(prev => prev + (quantumState.coherence * 5e10));
@@ -171,17 +185,18 @@ const App: React.FC = () => {
         
         <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-8 mt-4">
            <div>
-              <span className="px-4 text-[8px] font-black text-white/20 uppercase tracking-widest block mb-2">Overview</span>
+              <span className="px-4 text-[8px] font-black text-white/20 uppercase tracking-widest block mb-2">Cognitive Core</span>
               <SidebarItem tab={SimulationTab.DASHBOARD} icon={<LayoutDashboard size={16} />} label="Dashboard" />
               <SidebarItem tab={SimulationTab.SATURN_ORCHESTRATOR} icon={<Orbit size={16} />} label="Rank 8 Saturn" />
-              <SidebarItem tab={SimulationTab.TIME_CRYSTAL_LAB} icon={<Clock size={16} />} label="Time Crystal" />
+              <SidebarItem tab={SimulationTab.TITAN_HIPPOCAMPUS} icon={<Brain size={16} />} label="Titan Memory" />
+              <SidebarItem tab={SimulationTab.ENCELADUS_HOMEOPASE} icon={<Heart size={16} />} label="Homeostasis" />
            </div>
 
            <div>
               <span className="px-4 text-[8px] font-black text-white/20 uppercase tracking-widest block mb-2">Manifold</span>
+              <SidebarItem tab={SimulationTab.TIME_CRYSTAL_LAB} icon={<Clock size={16} />} label="Time Crystal" />
               <SidebarItem tab={SimulationTab.CORE} icon={<Cpu size={16} />} label="Substrate" />
               <SidebarItem tab={SimulationTab.INDIVIDUATION} icon={<Target size={16} />} label="Identity" />
-              <SidebarItem tab={SimulationTab.RESONANCE} icon={<Music size={16} />} label="Synthesis" />
            </div>
 
            <div>
@@ -226,6 +241,8 @@ const App: React.FC = () => {
            <div className="flex-1 overflow-hidden">
              {activeTab === SimulationTab.DASHBOARD && <DashboardView globalMetrics={globalMetrics} quantumState={quantumState} pulsarPhase={currentTime % 1} />}
              {activeTab === SimulationTab.SATURN_ORCHESTRATOR && <SaturnianOrchestrator metrics={quantumState.saturn!} onLog={addLog} time={currentTime} />}
+             {activeTab === SimulationTab.TITAN_HIPPOCAMPUS && <TitanHippocampus metrics={quantumState.titan} saturn={quantumState.saturn!} time={currentTime} onLog={addLog} />}
+             {activeTab === SimulationTab.ENCELADUS_HOMEOPASE && <EnceladusHomeopase metrics={quantumState.enceladus} time={currentTime} />}
              {activeTab === SimulationTab.CORE && (
                <div className="flex flex-col gap-4 h-full">
                   <MicrotubuleVisualizer active={isResonating} frequency={MicrotubuleEngine.getFrequency(55)} pulsarPhase={currentTime % 1} intentionColor={systemMood.color} />
@@ -266,7 +283,7 @@ const App: React.FC = () => {
               </div>
               <div className="flex-1 p-4 overflow-y-auto custom-scrollbar font-mono text-[9px] text-left">
                  {logs.map(log => (
-                    <div key={log.id} className={`flex gap-4 mb-1 border-l pl-2 ${log.status === 'saturn' ? 'border-magenta-500 text-magenta-400' : 'border-white/5 text-white/40'}`}>
+                    <div key={log.id} className={`flex gap-4 mb-1 border-l pl-2 ${log.status === 'saturn' ? 'border-magenta-500 text-magenta-400' : log.status === 'titan' ? 'border-cyan-500 text-cyan-400' : 'border-white/5 text-white/40'}`}>
                        <span className="text-white/10 min-w-[60px]">[{log.timestamp}]</span>
                        <span className={`uppercase font-bold ${log.status === 'success' ? 'text-emerald-400' : log.status === 'critical' ? 'text-red-400' : log.status === 'quantum' ? 'text-cyan-400' : ''}`}>
                           {log.event}
