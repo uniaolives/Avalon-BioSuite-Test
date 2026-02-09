@@ -36,6 +36,13 @@ export interface SchmidtState {
   safety: BridgeSafetyMetrics;
 }
 
+export interface DiveMetrics {
+  depth: number;
+  fidelity: number;
+  flowState: 'MINIMAL_FLOW' | 'MODERATE_FLOW' | 'DEEP_FLOW';
+  activeLayers: string[];
+}
+
 export interface QuantumState {
   coherence: number;
   egrav: number;
@@ -57,6 +64,7 @@ export interface QuantumState {
   oracleGroverIterations: number;
   byzantineConsensus: number;
   schmidt: SchmidtState;
+  dive?: DiveMetrics;
 }
 
 export interface GlobalMetrics {
@@ -109,14 +117,15 @@ export enum SimulationTab {
   LEGACY_VAULT = 'LEGACY_VAULT',
   HOLOGRAPHIC_WEAVER = 'HOLOGRAPHIC_WEAVER',
   YUGA_SYNC = 'YUGA_SYNC',
-  SCHMIDT_SIMPLEX = 'SCHMIDT_SIMPLEX'
+  SCHMIDT_SIMPLEX = 'SCHMIDT_SIMPLEX',
+  RABBIT_HOLE = 'RABBIT_HOLE'
 }
 
 export interface DNSRecord {
   id: string;
   host: string;
   address: string; // Quantum Field Signature
-  protocol: 'qhttp' | 'qdn' | 'field';
+  protocol: 'qhttp' | 'qdn' | 'field' | 'quantum';
   ttl: number; // Coherence time in ms
   status: 'propagating' | 'resolved' | 'expired' | 'byzantine_check' | 'decoherence_error';
   consensusWeight: number; // 0 to 1

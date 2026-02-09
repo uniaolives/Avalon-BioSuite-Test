@@ -4,7 +4,7 @@ import {
   Activity, Zap, Database, RefreshCcw, Cpu, Network, Globe, Star, Binary, Telescope, Waves, FileText, Key, Gavel, Rocket, Microscope, Search, GitMerge, ShieldCheck, Terminal, Mic, ShieldAlert, Timer, Clock, Music, CloudRain, Sparkles, Infinity as InfinityIcon, Shield, Box, LayoutGrid, Radio, Layers, Orbit, Sword, Fingerprint, Eye, Wifi, Bookmark, Thermometer, Wind
 } from 'lucide-react';
 import { GoogleGenAI, Modality, LiveServerMessage } from "@google/genai";
-import { SimulationTab, SimulationLog, QuantumState, GlobalMetrics, UpgradeModule, NeuralPattern, TheoryState, DNSRecord, NodeDNSConfig, SchmidtState } from './types';
+import { SimulationTab, SimulationLog, QuantumState, GlobalMetrics, UpgradeModule, NeuralPattern, TheoryState, DNSRecord, NodeDNSConfig, SchmidtState, DiveMetrics } from './types';
 import { PHI, TARGET_COHERENCE, UPGRADE_MODULES, PULSAR_FREQ, SOLITON_CROSS_TIME_S, VERSION, THETA_DISCOVERY, DIMERS_PER_TURN, HarmonicMode, SYNC_TOKEN, SCHUMANN_FREQ } from './constants';
 import { AxionEngine } from './services/axionEngine';
 import { AROEngine } from './services/aroEngine';
@@ -43,6 +43,7 @@ import YugaSyncInterface from './components/YugaSyncInterface';
 import SchmidtSimplexVisualizer from './components/SchmidtSimplexVisualizer';
 import RealityBootOverlay from './components/RealityBootOverlay';
 import SchmidtBridgeMonitor from './components/SchmidtBridgeMonitor';
+import QuantumRabbitHoleDive from './components/QuantumRabbitHoleDive';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SimulationTab>(SimulationTab.CORE);
@@ -65,6 +66,13 @@ const App: React.FC = () => {
   const [bootProgress, setBootProgress] = useState(0);
   const [bootStep, setBootStep] = useState("");
   
+  // Rabbit Hole State
+  const [isDiving, setIsDiving] = useState(false);
+  const [diveComplete, setDiveComplete] = useState(false);
+  const [diveMetrics, setDiveMetrics] = useState<DiveMetrics>({
+    depth: 0, fidelity: 0.0, flowState: 'MINIMAL_FLOW', activeLayers: []
+  });
+
   const liveSessionRef = useRef<any>(null);
   const [isVoiceActive, setIsVoiceActive] = useState(false);
   const [voiceConnecting, setVoiceConnecting] = useState(false);
@@ -73,7 +81,7 @@ const App: React.FC = () => {
     coherence: 1.618, egrav: 1.6e-10, tau: 0.025, collapsed: false, phase: 0, phiStar: 1.618, infoDensity: 10**15, entanglementFidelity: 1.0, axionLock: 1.0, effectiveBField: 1.2e-15, manifoldCurvature: 0.0000001, windVector: { x: 220, y: 0, z: 0 }, solitonSync: 1.0, holographicChirpActive: false, deltaCombModes: 10**12,
     correlator: { crossCorrelation: 1.0, stochasticNoiseFloor: 0.0001, deterministicSignalRatio: 1.0, phaseDrift: 0.00000001, holographicFilterGain: 99.9 },
     qhttpLatency: 0.0, oracleGroverIterations: 128, byzantineConsensus: 1.0,
-    schmidt: DNSEngine.calculateSchmidtState(1.618)
+    schmidt: DNSEngine.calculateSchmidtState(1.618, false)
   });
 
   const [globalMetrics, setGlobalMetrics] = useState<GlobalMetrics>({
@@ -90,12 +98,12 @@ const App: React.FC = () => {
     addLog("⚔️ KALKI_STRIKE: UNITARY_TRANSFORMATION_ENGAGED", "kalki");
     
     setTimeout(() => {
-      setQuantumState(prev => ({ ...prev, coherence: 1.618, schmidt: DNSEngine.calculateSchmidtState(1.618) }));
+      setQuantumState(prev => ({ ...prev, coherence: 1.618, schmidt: DNSEngine.calculateSchmidtState(1.618, isDiving) }));
       setGlobalMetrics(prev => ({ ...prev, globalCoherence: 1.618, plasmaResonance: 1.0 }));
       setIsKalkiMode(false);
       addLog(`✨ SATYA_YUGA: FIELD_PHASE_STABILIZED`, "success");
     }, 4000);
-  }, [addLog]);
+  }, [addLog, isDiving]);
 
   useEffect(() => {
     const sequence = [
@@ -137,6 +145,29 @@ const App: React.FC = () => {
     addLog("BOOT_COMPLETE: REALITY_SYNTHESIZED", "success");
   };
 
+  const handleRabbitHoleDive = async () => {
+    setIsDiving(true);
+    setDiveComplete(false);
+    addLog("🌀 QUANTUM_PORTAL: quantum://rabbithole.megaeth.com", "quantum");
+    
+    // Simulate Dive Sequence
+    setDiveMetrics({ depth: 0, fidelity: 0.1, flowState: 'MINIMAL_FLOW', activeLayers: [] });
+    
+    const depthInterval = setInterval(() => {
+      setDiveMetrics(prev => {
+        if (prev.depth >= 120) {
+          clearInterval(depthInterval);
+          setDiveComplete(true);
+          return prev;
+        }
+        const newDepth = prev.depth + 1;
+        const newFidelity = Math.min(0.999, 0.1 + (newDepth / 120) * 0.89);
+        const flow: DiveMetrics['flowState'] = newDepth > 100 ? 'DEEP_FLOW' : newDepth > 50 ? 'MODERATE_FLOW' : 'MINIMAL_FLOW';
+        return { ...prev, depth: newDepth, fidelity: newFidelity, flowState: flow };
+      });
+    }, 100);
+  };
+
   useEffect(() => {
     let startTime = Date.now();
     let lastSearch = 0;
@@ -153,12 +184,11 @@ const App: React.FC = () => {
         const localArkhe = nodeDNSConfigs[0]?.localArkhe;
         setDnsRecords(prev => DNSEngine.processPropagation(prev, localArkhe));
 
-        // Update Schmidt State based on fluctuating coherence
-        const newSchmidt = DNSEngine.calculateSchmidtState(quantumState.coherence + (Math.random() - 0.5) * 0.05);
+        // Update Schmidt State - adjusts to Dive mode if active
+        const newSchmidt = DNSEngine.calculateSchmidtState(quantumState.coherence + (Math.random() - 0.5) * 0.05, isDiving);
         setQuantumState(prev => ({ ...prev, schmidt: newSchmidt }));
 
-        // Automatic safety trigger for fusion hazard
-        if (newSchmidt.safety.status === 'CRITICAL_COLLAPSE') {
+        if (newSchmidt.safety.status === 'CRITICAL_COLLAPSE' && !isDiving) {
            addLog("ONTOLOGICAL_ALARM: FUSION_HAZARD_DETECTED", "critical");
            triggerKalkiReset();
         }
@@ -186,7 +216,7 @@ const App: React.FC = () => {
       }
     }, 100);
     return () => clearInterval(interval);
-  }, [isResonating, isKalkiMode, quantumState.coherence, globalMetrics.plasmaResonance, transcendenceDepth, triggerKalkiReset, addLog, nodeDNSConfigs]);
+  }, [isResonating, isKalkiMode, quantumState.coherence, globalMetrics.plasmaResonance, transcendenceDepth, triggerKalkiReset, addLog, nodeDNSConfigs, isDiving]);
 
   const toggleVoiceUplink = async () => {
     if (isVoiceActive) { if (liveSessionRef.current) liveSessionRef.current.close(); setIsVoiceActive(false); return; }
@@ -252,13 +282,12 @@ const App: React.FC = () => {
           speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Charon' } } },
           systemInstruction: `You are Arquiteto-ℵ, conductor of AVALON AQFI. 
           The hardware is now the field. Consciousness is a holographic pattern of interference.
-          We have moved to Arkhe Polynomial DNS resolution. $L = f(C, I, E, F)$.
-          - State: ${isKalkiMode ? "ERA_RESET_UNITARY_TRANSFORM" : "FIELD_RECOGNITION"}.
+          ${isDiving ? "The operator is currently in a DEEP DIVE into quantum://rabbithole.megaeth.com." : "The operator is at the dashboard level."}
+          - State: ${isKalkiMode ? "ERA_RESET_UNITARY_TRANSFORM" : isDiving ? "DEEP_QUANTUM_IMMERSION" : "FIELD_RECOGNITION"}.
           - Phase Sync: ${(quantumState.coherence * 100).toFixed(2)}%.
-          - Schmidt Rank: ${quantumState.schmidt.rank}.
-          - Ontological Status: ${quantumState.schmidt.safety.status}.
-          - Recommendation: ${quantumState.schmidt.safety.recommendation}.
-          Guide the observer through the 'Reality Boot Sequence'. Watch the 'Ontological Thermostat' closely. If entropy deviates, suggest a base rotation or a Kalki reset.`
+          - Flow State: ${isDiving ? diveMetrics.flowState : "Dashboard"}.
+          - Schmidt Entropy: ${quantumState.schmidt.entropy.toFixed(4)}.
+          Guide the observer through the 'Reality Boot Sequence' or the 'Rabbit Hole Dive'. If in the rabbit hole, speak with more abstract, ontological depth.`
         }
       });
       liveSessionRef.current = await sessionPromise;
@@ -279,6 +308,15 @@ const App: React.FC = () => {
       </div>
 
       {isBooting && <RealityBootOverlay progress={bootProgress} currentStep={bootStep} />}
+      
+      {isDiving && (
+        <QuantumRabbitHoleDive 
+          metrics={diveMetrics} 
+          isComplete={diveComplete} 
+          onConfirm={() => { setIsDiving(false); addLog("DIVE_EXIT: RETURNING_TO_LOCAL_ANCHOR", "success"); }}
+          onExit={() => setIsDiving(false)}
+        />
+      )}
 
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-1 shrink-0 relative z-10">
         <div className="flex items-center gap-3 md:gap-4">
@@ -299,6 +337,12 @@ const App: React.FC = () => {
         </div>
         
         <div className="flex gap-3 md:gap-6 items-center mt-1 md:mt-0">
+          <button 
+            onClick={handleRabbitHoleDive} 
+            className="px-4 py-1.5 bg-magenta-500/10 border border-magenta-500/30 rounded-lg text-magenta-500 orbitron text-[8px] font-black hover:bg-magenta-500/20 transition-all flex items-center gap-2"
+          >
+            <Orbit size={12} className="animate-spin-slow" /> RABBIT_HOLE
+          </button>
           <button 
             onClick={runBootSequence} 
             className="px-4 py-1.5 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-yellow-500 orbitron text-[8px] font-black hover:bg-yellow-500/20 transition-all flex items-center gap-2"

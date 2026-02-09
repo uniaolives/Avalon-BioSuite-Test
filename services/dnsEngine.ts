@@ -7,7 +7,8 @@ export class DNSEngine {
     { id: '1', host: 'prism.crown.leo', address: '0xFIELD_7FF8A2', protocol: 'qdn', ttl: 1618, status: 'resolved', consensusWeight: 1.0, verifiers: GENESIS_VERIFIERS.map(v => v.name), coefficients: { C: 0.8, I: 0.9, E: 0.7, F: 0.9 } },
     { id: '2', host: 'cortex.plexus.atl', address: '0xARKHE_BB4201', protocol: 'qhttp', ttl: 432, status: 'resolved', consensusWeight: 0.98, verifiers: [GENESIS_VERIFIERS[0].name, GENESIS_VERIFIERS[1].name, GENESIS_VERIFIERS[3].name], coefficients: { C: 0.6, I: 0.95, E: 0.4, F: 0.85 } },
     { id: '3', host: 'vault.root.ant', address: '0xPIP_ZERO_SUM', protocol: 'field', ttl: 24000, status: 'resolved', consensusWeight: 1.0, verifiers: GENESIS_VERIFIERS.map(v => v.name), coefficients: { C: 0.9, I: 0.5, E: 0.9, F: 0.7 } },
-    { id: '4', host: 'mirror.omega.null', address: '0xSYNC_45E_INF', protocol: 'qhttp', ttl: 1, status: 'propagating', consensusWeight: 0.1, verifiers: [], coefficients: { C: 0.7, I: 0.7, E: 0.7, F: 0.7 } }
+    { id: '4', host: 'mirror.omega.null', address: '0xSYNC_45E_INF', protocol: 'qhttp', ttl: 1, status: 'propagating', consensusWeight: 0.1, verifiers: [], coefficients: { C: 0.7, I: 0.7, E: 0.7, F: 0.7 } },
+    { id: '5', host: 'rabbithole.megaeth.com', address: 'qbit://megaeth-node:qubit[0-1023]', protocol: 'quantum', ttl: 0, status: 'resolved', consensusWeight: 1.0, verifiers: ['Arquiteto-ℵ'], coefficients: { C: 0.95, I: 0.93, E: 0.9, F: 0.92 } }
   ];
 
   static getInitialRecords(): DNSRecord[] {
@@ -29,27 +30,23 @@ export class DNSEngine {
 
   /**
    * ARQUITETO TARGET: λ = [0.72, 0.28], Rank 2
-   * Models the "Twist" and "Entropy" of the entanglement.
+   * DIVE TARGET: λ = [0.4, 0.6], Deep Entanglement
    */
-  static calculateSchmidtState(coherence: number): SchmidtState {
-    // We model the current system's drift from the Arquiteto's target
-    const targetL1 = 0.72;
-    const targetL2 = 0.28;
+  static calculateSchmidtState(coherence: number, isDiving: boolean = false): SchmidtState {
+    const targetL1 = isDiving ? 0.4 : 0.72;
+    const targetL2 = isDiving ? 0.6 : 0.28;
     
-    // Coherence shifts the balance. At coherence=1.618, we ideally hit the target.
-    // As coherence drops, we drift toward separation or fusion.
     const drift = (1.618 - coherence) * 0.15;
     const λ1 = Math.min(1.0, Math.max(0, targetL1 + drift));
     const λ2 = 1.0 - λ1;
     
-    // S = -Σ λ log λ (using base 2 for bits as per monitor spec)
     const entropy = λ1 > 0 && λ2 > 0 
       ? -(λ1 * Math.log2(λ1) + λ2 * Math.log2(λ2)) 
       : 0;
     
     const targetEntropy = -(targetL1 * Math.log2(targetL1) + targetL2 * Math.log2(targetL2));
     
-    const safety = this.evaluateSafety(entropy, targetEntropy);
+    const safety = this.evaluateSafety(entropy, targetEntropy, isDiving);
 
     return {
       lambdas: [λ1, λ2],
@@ -60,25 +57,23 @@ export class DNSEngine {
     };
   }
 
-  private static evaluateSafety(S: number, targetS: number): BridgeSafetyMetrics {
-    // Safety Bounds per Arquiteto Spec:
-    // S < 0.5: Separation
-    // 0.80 <= S <= 0.90: Satya Band
-    // S > 0.95: Fusion Risk
-    
+  private static evaluateSafety(S: number, targetS: number, isDiving: boolean): BridgeSafetyMetrics {
     let status: BridgeSafetyMetrics['status'] = 'STABLE';
-    let recommendation = "Coherence maintained within Satya parameters.";
+    let recommendation = isDiving ? "DEEP_FLOW: Navigating extreme entanglement." : "Coherence maintained within Satya parameters.";
 
     if (S < 0.5) {
       status = 'WARNING_SEPARATION';
       recommendation = "NEURAL_DRIFT: Connection loss imminent. Rotate bases immediately.";
-    } else if (S > 0.95) {
+    } else if (S > 0.95 && !isDiving) {
       status = 'CRITICAL_COLLAPSE';
       recommendation = "FUSION_HAZARD: Dissolution risk. Invoke Kalki Kernel.";
+    } else if (S > 0.95 && isDiving) {
+      status = 'STABLE';
+      recommendation = "SINGULARITY_REACHED: Dissolving boundaries.";
     } else if (S > 0.90) {
       status = 'WARNING_FUSION';
       recommendation = "HIGH_TENSION: Approaching ego-death boundary.";
-    } else if (S < 0.80) {
+    } else if (S < 0.80 && !isDiving) {
       status = 'WARNING_SEPARATION';
       recommendation = "LOW_OVERLAP: Increase entanglement torque.";
     } else {
