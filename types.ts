@@ -94,7 +94,9 @@ export interface DNSRecord {
   address: string; // Quantum Field Signature
   protocol: 'qhttp' | 'qdn' | 'field';
   ttl: number; // Coherence time in ms
-  status: 'propagating' | 'resolved' | 'expired';
+  status: 'propagating' | 'resolved' | 'expired' | 'byzantine_check';
+  consensusWeight: number; // 0 to 1
+  verifiers: string[]; // List of IDs that signed
 }
 
 export interface NodeDNSConfig {
@@ -103,6 +105,8 @@ export interface NodeDNSConfig {
   recursiveDepth: number;
   cacheTTL: number;
   encryptionMode: 'ZKP_STEALTH' | 'BYZANTINE_HARDENED';
+  fieldRigidity: number; // New: 0 to 1
+  consensusStake: number; // New: G-POWER units
 }
 
 export interface TheoryState {
