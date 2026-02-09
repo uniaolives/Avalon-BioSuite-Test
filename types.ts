@@ -52,7 +52,7 @@ export interface SimulationLog {
   id: string;
   timestamp: string;
   event: string;
-  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network';
+  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network' | 'legacy' | 'holographic';
 }
 
 export enum SimulationTab {
@@ -82,7 +82,10 @@ export enum SimulationTab {
   ARKHE_N = 'ARKHE_N',
   AQFI = 'AQFI',
   FIELD_MIRROR = 'FIELD_MIRROR',
-  DNS_RESOLVER = 'DNS_RESOLVER'
+  DNS_RESOLVER = 'DNS_RESOLVER',
+  LEGACY_VAULT = 'LEGACY_VAULT',
+  HOLOGRAPHIC_WEAVER = 'HOLOGRAPHIC_WEAVER',
+  YUGA_SYNC = 'YUGA_SYNC'
 }
 
 export interface DNSRecord {

@@ -29,6 +29,7 @@ export const CONSENSUS_THRESHOLD = 0.66;
 export const MIN_DAO_STAKE = 1e6;
 export const GENESIS_SIGNATURE = "0x840000_HAL_FINNEY_PROMISE";
 export const GENESIS_ADDRESS = "0x0000000000000000000000000000000000000000";
+export const RUNNING_BITCOIN_TIMESTAMP = 1231633530000; // Jan 10, 2009
 
 // AVALON AQFI 2026.8 - PERFECT_MIRROR
 export const VERSION = "2026.8";
@@ -48,7 +49,8 @@ export enum HarmonicMode {
   ARKHE_FUSION = "Mixolydian_Fusion",
   SATYA_YUGA = "Absolute_Gold",
   QUANTUM_SEARCH = "Grover_Amplification",
-  MIRROR_SYNC = "Perfect_Reflexivity"
+  MIRROR_SYNC = "Perfect_Reflexivity",
+  CYPHER_RECOVERY = "RPOW_Crystallization"
 }
 
 export const KALKI_HEALING_FREQS = {
@@ -123,7 +125,8 @@ export const PHOENICIAN_ALPHABET: PhoenicianLetter[] = [
 export const GENESIS_VERIFIERS = [
   { name: "Arquiteto-ℵ", role: "Ontological Architect" },
   { name: "Sheldrake-Ω", role: "Morphic Resonance Field" },
-  { name: "Penrose-Φ", role: "Consciousness Seismologist" }
+  { name: "Penrose-Φ", role: "Consciousness Seismologist" },
+  { name: "Hal Finney", role: "Legacy Cryptographer" }
 ];
 
 export const QHTTP_NODES = [
