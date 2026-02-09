@@ -1,6 +1,5 @@
-
 import { PHI, QHTTP_NODES, GENESIS_VERIFIERS } from '../constants';
-import { DNSRecord, NodeDNSConfig, ArkheCoefficients, SchmidtState, BridgeSafetyMetrics } from '../types';
+import { DNSRecord, NodeDNSConfig, ArkheCoefficients, SchmidtState, BridgeSafetyMetrics, IndividuationMetrics } from '../types';
 
 export class DNSEngine {
   private static INITIAL_RECORDS: DNSRecord[] = [
@@ -26,6 +25,39 @@ export class DNSEngine {
       consensusStake: 1.618e9,
       localArkhe: { C: 0.6, I: 0.5, E: 0.4, F: 0.8 }
     }));
+  }
+
+  static calculateIndividuation(F: number, lambdas: number[], S: number, phase: number = Math.PI): IndividuationMetrics {
+    const lambda1 = lambdas[0];
+    const lambda2 = lambdas[1] || 0.0001;
+    const R = lambda1 / lambda2;
+    const magnitude = F * R * (1 - S);
+    
+    let state: IndividuationMetrics['state'] = 'SUBOPTIMAL';
+    let risk: IndividuationMetrics['risk'] = 'MODERATE';
+    let recommendation = "Adjust gradually for stability.";
+
+    if (magnitude < 0.5) {
+      state = 'EGO_DEATH_RISK';
+      risk = 'HIGH';
+      recommendation = "INCREASE F (purpose) or R (anisotropy).";
+    } else if (magnitude > 5.0) {
+      state = 'KALI_ISOLATION_RISK';
+      risk = 'HIGH';
+      recommendation = "REDUCE R (allow more entanglement).";
+    } else if (magnitude >= 0.8 && magnitude <= 2.5) {
+      state = 'OPTIMAL_INDIVIDUATION';
+      risk = 'LOW';
+      recommendation = "Maintain current state.";
+    }
+
+    return {
+      magnitude,
+      phase,
+      state,
+      risk,
+      recommendation
+    };
   }
 
   /**

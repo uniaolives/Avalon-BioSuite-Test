@@ -1,4 +1,3 @@
-
 export interface FrequencyData {
   harmonic: number;
   frequency: number;
@@ -34,6 +33,14 @@ export interface SchmidtState {
   rank: number;
   twistAngle: number; // Relative phase in radians
   safety: BridgeSafetyMetrics;
+}
+
+export interface IndividuationMetrics {
+  magnitude: number;
+  phase: number;
+  state: 'OPTIMAL_INDIVIDUATION' | 'EGO_DEATH_RISK' | 'KALI_ISOLATION_RISK' | 'SUBOPTIMAL';
+  risk: 'LOW' | 'MODERATE' | 'HIGH';
+  recommendation: string;
 }
 
 export interface DiveMetrics {
@@ -73,6 +80,7 @@ export interface QuantumState {
   oracleGroverIterations: number;
   byzantineConsensus: number;
   schmidt: SchmidtState;
+  individuation: IndividuationMetrics;
   dive?: DiveMetrics;
 }
 
@@ -92,7 +100,7 @@ export interface SimulationLog {
   id: string;
   timestamp: string;
   event: string;
-  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network' | 'legacy' | 'holographic';
+  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network' | 'legacy' | 'holographic' | 'individuation';
 }
 
 export enum SimulationTab {
@@ -130,7 +138,9 @@ export enum SimulationTab {
   RABBIT_HOLE = 'RABBIT_HOLE',
   WORLD_SIM = 'WORLD_SIM',
   FORMALIZATION = 'FORMALIZATION',
-  AUTO_CONTAINMENT = 'AUTO_CONTAINMENT'
+  AUTO_CONTAINMENT = 'AUTO_CONTAINMENT',
+  GATEWAY_CONTROL = 'GATEWAY_CONTROL',
+  INDIVIDUATION = 'INDIVIDUATION'
 }
 
 export interface DNSRecord {
