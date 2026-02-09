@@ -97,6 +97,14 @@ export interface DNSRecord {
   status: 'propagating' | 'resolved' | 'expired';
 }
 
+export interface NodeDNSConfig {
+  nodeId: string;
+  primaryResolver: string;
+  recursiveDepth: number;
+  cacheTTL: number;
+  encryptionMode: 'ZKP_STEALTH' | 'BYZANTINE_HARDENED';
+}
+
 export interface TheoryState {
   bitsProcessed: number;
   universeAge: number;

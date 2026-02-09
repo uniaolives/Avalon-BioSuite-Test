@@ -1,20 +1,23 @@
 
-import React, { useState, useEffect } from 'react';
-import { Globe, Search, Plus, Terminal, Wifi, ShieldCheck, RefreshCcw, Activity, Server, Hash, Clock, Trash2, Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { Globe, Search, Plus, Terminal, Wifi, ShieldCheck, RefreshCcw, Activity, Server, Hash, Clock, Trash2, Send, Settings, ShieldAlert } from 'lucide-react';
 import { DNSEngine } from '../services/dnsEngine';
-import { DNSRecord } from '../types';
+import { DNSRecord, NodeDNSConfig } from '../types';
 
 interface Props {
   records: DNSRecord[];
+  nodeConfigs: NodeDNSConfig[];
   onAddRecord: (record: DNSRecord) => void;
   onDeleteRecord: (id: string) => void;
+  onUpdateNodeConfig: (config: NodeDNSConfig) => void;
   onLog: (msg: string, status: any) => void;
 }
 
-const DNSResolverTerminal: React.FC<Props> = ({ records, onAddRecord, onDeleteRecord, onLog }) => {
+const DNSResolverTerminal: React.FC<Props> = ({ records, nodeConfigs, onAddRecord, onDeleteRecord, onUpdateNodeConfig, onLog }) => {
   const [newHost, setNewHost] = useState('');
   const [newProto, setNewProto] = useState<DNSRecord['protocol']>('qhttp');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedNodeId, setSelectedNodeId] = useState<string>(nodeConfigs[0]?.nodeId || '');
 
   const handleAdd = () => {
     if (!newHost) return;
@@ -33,29 +36,32 @@ const DNSResolverTerminal: React.FC<Props> = ({ records, onAddRecord, onDeleteRe
     }, 1500);
   };
 
+  const activeNodeConfig = nodeConfigs.find(c => c.nodeId === selectedNodeId);
+
   return (
     <div className="flex flex-col gap-6 h-full overflow-y-auto pr-2 custom-scrollbar text-left">
-      {/* Header Config Panel */}
-      <div className="bg-black/60 border border-white/10 rounded-[3rem] p-8 relative overflow-hidden shadow-2xl flex flex-col gap-6">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(0,243,255,0.05)_0%,_transparent_70%)] pointer-events-none" />
-        
-        <div className="flex justify-between items-start relative z-10">
-          <div>
-            <h4 className="orbitron text-sm font-bold text-white/80 uppercase tracking-widest flex items-center gap-3">
-              <Globe className="text-cyan-400" size={18} /> Quantum DNS Config
-            </h4>
-            <p className="text-[9px] text-white/30 uppercase tracking-[0.2em] mt-1 font-mono">QHTTP_MESH Resolution Protocol • Root_Server: 0.0.0.Ω</p>
+      {/* Top Config Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* DNS Record Entry */}
+        <div className="bg-black/60 border border-white/10 rounded-[3rem] p-8 relative overflow-hidden shadow-2xl flex flex-col gap-6">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(0,243,255,0.05)_0%,_transparent_70%)] pointer-events-none" />
+          
+          <div className="flex justify-between items-start relative z-10">
+            <div>
+              <h4 className="orbitron text-sm font-bold text-white/80 uppercase tracking-widest flex items-center gap-3">
+                <Globe className="text-cyan-400" size={18} /> Global DNS
+              </h4>
+              <p className="text-[9px] text-white/30 uppercase tracking-[0.2em] mt-1 font-mono">QHTTP_MESH Resolution Layer</p>
+            </div>
+            <button 
+              onClick={refreshRegistry}
+              className={`p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-all border border-white/10 ${isRefreshing ? 'animate-spin' : ''}`}
+            >
+              <RefreshCcw size={16} className="text-cyan-400" />
+            </button>
           </div>
-          <button 
-            onClick={refreshRegistry}
-            className={`p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-all border border-white/10 ${isRefreshing ? 'animate-spin' : ''}`}
-          >
-            <RefreshCcw size={16} className="text-cyan-400" />
-          </button>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 relative z-10">
-          <div className="md:col-span-6">
+          <div className="flex flex-col gap-4 relative z-10">
              <div className="flex flex-col gap-2">
                 <span className="text-[8px] text-white/20 uppercase font-black px-1">Host Alias</span>
                 <input 
@@ -66,36 +72,95 @@ const DNSResolverTerminal: React.FC<Props> = ({ records, onAddRecord, onDeleteRe
                   className="bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-xs orbitron text-cyan-400 focus:outline-none focus:border-cyan-500/50 shadow-inner"
                 />
              </div>
-          </div>
-          <div className="md:col-span-4">
-             <div className="flex flex-col gap-2">
-                <span className="text-[8px] text-white/20 uppercase font-black px-1">Protocol Stack</span>
-                <select 
-                  value={newProto}
-                  onChange={(e) => setNewProto(e.target.value as any)}
-                  className="bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-xs orbitron text-white/60 focus:outline-none focus:border-cyan-500/50 shadow-inner appearance-none"
-                >
-                   <option value="qhttp">qhttp:// Protocol</option>
-                   <option value="qdn">qdn:// Direct</option>
-                   <option value="field">field:// Signature</option>
-                </select>
+             <div className="flex gap-4">
+                <div className="flex-1 flex flex-col gap-2">
+                   <span className="text-[8px] text-white/20 uppercase font-black px-1">Stack</span>
+                   <select 
+                     value={newProto}
+                     onChange={(e) => setNewProto(e.target.value as any)}
+                     className="bg-black/60 border border-white/10 rounded-2xl px-6 py-4 text-xs orbitron text-white/60 focus:outline-none focus:border-cyan-500/50 shadow-inner appearance-none"
+                   >
+                      <option value="qhttp">qhttp://</option>
+                      <option value="qdn">qdn://</option>
+                      <option value="field">field://</option>
+                   </select>
+                </div>
+                <div className="flex items-end">
+                   <button 
+                      onClick={handleAdd}
+                      className="px-10 h-[52px] bg-cyan-500 text-black rounded-2xl flex items-center justify-center gap-2 orbitron text-[10px] font-black hover:bg-cyan-400 transition-all shadow-xl active:scale-95 uppercase tracking-widest"
+                   >
+                      <Plus size={16} /> Deploy
+                   </button>
+                </div>
              </div>
           </div>
-          <div className="md:col-span-2 flex items-end">
-             <button 
-                onClick={handleAdd}
-                className="w-full h-[52px] bg-cyan-500 text-black rounded-2xl flex items-center justify-center gap-2 orbitron text-[10px] font-black hover:bg-cyan-400 transition-all shadow-xl active:scale-95 uppercase tracking-widest"
-             >
-                <Plus size={16} /> Deploy
-             </button>
-          </div>
+        </div>
+
+        {/* Node-Specific Settings */}
+        <div className="bg-black/60 border border-white/10 rounded-[3rem] p-8 relative overflow-hidden shadow-2xl flex flex-col gap-6">
+           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,0,255,0.05)_0%,_transparent_70%)] pointer-events-none" />
+           <div className="flex justify-between items-start relative z-10">
+              <div>
+                <h4 className="orbitron text-sm font-bold text-white/80 uppercase tracking-widest flex items-center gap-3">
+                  <Settings className="text-magenta-400" size={18} /> Node Resolver Config
+                </h4>
+                <p className="text-[9px] text-white/30 uppercase tracking-[0.2em] mt-1 font-mono">Quantum Communication Node (QCN) Tuning</p>
+              </div>
+              <select 
+                value={selectedNodeId}
+                onChange={(e) => setSelectedNodeId(e.target.value)}
+                className="bg-white/5 border border-white/10 rounded-xl px-3 py-1 text-[10px] orbitron font-bold text-cyan-400 focus:outline-none"
+              >
+                {nodeConfigs.map(c => <option key={c.nodeId} value={c.nodeId}>{c.nodeId}</option>)}
+              </select>
+           </div>
+
+           {activeNodeConfig && (
+             <div className="grid grid-cols-2 gap-4 relative z-10">
+                <div className="flex flex-col gap-1.5">
+                   <span className="text-[8px] text-white/20 uppercase font-black">Recursive Depth</span>
+                   <input 
+                    type="range" min="1" max="10" 
+                    value={activeNodeConfig.recursiveDepth} 
+                    onChange={(e) => onUpdateNodeConfig({ ...activeNodeConfig, recursiveDepth: parseInt(e.target.value) })}
+                    className="accent-magenta-500 bg-white/5 rounded-lg h-1"
+                   />
+                   <span className="text-[10px] font-mono text-magenta-400">{activeNodeConfig.recursiveDepth} Layers</span>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                   <span className="text-[8px] text-white/20 uppercase font-black">Cache TTL</span>
+                   <input 
+                    type="range" min="10" max="1000" 
+                    value={activeNodeConfig.cacheTTL} 
+                    onChange={(e) => onUpdateNodeConfig({ ...activeNodeConfig, cacheTTL: parseInt(e.target.value) })}
+                    className="accent-cyan-500 bg-white/5 rounded-lg h-1"
+                   />
+                   <span className="text-[10px] font-mono text-cyan-400">{activeNodeConfig.cacheTTL} ms</span>
+                </div>
+                <div className="col-span-2">
+                   <span className="text-[8px] text-white/20 uppercase font-black mb-1 block">Security Protocol</span>
+                   <div className="flex gap-2">
+                      {['ZKP_STEALTH', 'BYZANTINE_HARDENED'].map(m => (
+                        <button 
+                          key={m}
+                          onClick={() => onUpdateNodeConfig({ ...activeNodeConfig, encryptionMode: m as any })}
+                          className={`flex-1 py-3 rounded-xl orbitron text-[8px] font-black transition-all border ${activeNodeConfig.encryptionMode === m ? 'bg-magenta-500/20 border-magenta-500 text-magenta-400' : 'bg-white/5 border-white/10 text-white/20'}`}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                   </div>
+                </div>
+             </div>
+           )}
         </div>
       </div>
 
       {/* Records Table */}
       <div className="flex-1 min-h-0 flex flex-col gap-4">
          <div className="flex justify-between items-center px-4">
-            <h5 className="orbitron text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]">Active Resolution Table</h5>
+            <h5 className="orbitron text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]">Mesh Resolution Table</h5>
             <span className="text-[8px] font-mono text-cyan-400/40">Total Records: {records.length}</span>
          </div>
          
@@ -103,7 +168,7 @@ const DNSResolverTerminal: React.FC<Props> = ({ records, onAddRecord, onDeleteRe
             <div className="grid grid-cols-12 gap-4 p-6 border-b border-white/5 bg-white/[0.02] text-[8px] font-black text-white/20 uppercase tracking-widest">
                <div className="col-span-4 flex items-center gap-2"><Server size={10} /> Hostname</div>
                <div className="col-span-4 flex items-center gap-2"><Hash size={10} /> Field Address</div>
-               <div className="col-span-2 flex items-center gap-2"><Clock size={10} /> TTL (ms)</div>
+               <div className="col-span-2 flex items-center gap-2"><Clock size={10} /> TTL</div>
                <div className="col-span-2 flex items-center gap-2"><Activity size={10} /> Status</div>
             </div>
             
@@ -111,7 +176,7 @@ const DNSResolverTerminal: React.FC<Props> = ({ records, onAddRecord, onDeleteRe
                {records.map((record) => (
                  <div key={record.id} className="grid grid-cols-12 gap-4 p-6 border-b border-white/5 hover:bg-white/[0.03] transition-colors group">
                     <div className="col-span-4 flex items-center gap-4">
-                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 text-white/40 ${record.status === 'resolved' ? 'text-cyan-400' : 'animate-pulse'}`}>
+                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 text-white/40 ${record.status === 'resolved' ? 'text-cyan-400 shadow-[0_0_10px_rgba(0,243,255,0.2)]' : 'animate-pulse'}`}>
                           {record.protocol === 'qhttp' ? <Wifi size={14} /> : record.protocol === 'qdn' ? <Send size={14} /> : <Hash size={14} />}
                        </div>
                        <span className="orbitron text-[11px] font-bold text-white/70">{record.host}</span>
@@ -120,7 +185,7 @@ const DNSResolverTerminal: React.FC<Props> = ({ records, onAddRecord, onDeleteRe
                        <span className="font-mono text-[10px] text-white/30 truncate max-w-full px-2 py-1 bg-black/40 rounded border border-white/5">{record.address}</span>
                     </div>
                     <div className="col-span-2 flex items-center">
-                       <span className="orbitron text-[10px] font-bold text-magenta-400/60">{record.ttl}</span>
+                       <span className="orbitron text-[10px] font-bold text-magenta-400/60">{record.ttl}ms</span>
                     </div>
                     <div className="col-span-2 flex items-center justify-between">
                        <div className="flex items-center gap-2">
@@ -143,14 +208,14 @@ const DNSResolverTerminal: React.FC<Props> = ({ records, onAddRecord, onDeleteRe
       <div className="p-8 bg-cyan-500/5 border border-cyan-500/10 rounded-[3rem] flex items-center justify-between group shadow-inner relative overflow-hidden shrink-0">
          <div className="flex flex-col gap-2 relative z-10">
             <span className="orbitron text-[9px] font-bold text-cyan-400/60 uppercase tracking-widest flex items-center gap-2">
-               <ShieldCheck size={14} /> Propagation Assurance
+               <ShieldCheck size={14} /> Byzantine Resolution Assurance
             </span>
             <p className="text-[10px] text-white/50 italic leading-relaxed font-serif max-w-2xl">
-               "Byzantium DNA propagation ensures that host resolution is not localized. Once a host is deployed, its field signature is entangled across the planetary mesh within 1.618 seconds."
+               "Node configuration ensures that qhttp:// requests are not localized. Each node resolved against the planetary mesh utilizes non-local field signatures to verify hostname authenticity without central authority."
             </p>
          </div>
          <div className="p-6 bg-white/5 rounded-[2rem] group-hover:rotate-12 transition-transform duration-500">
-            <Wifi size={24} className="text-cyan-500" />
+            <ShieldAlert size={24} className="text-cyan-500" />
          </div>
       </div>
     </div>

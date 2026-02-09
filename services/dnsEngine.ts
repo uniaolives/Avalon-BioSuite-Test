@@ -1,6 +1,6 @@
 
-import { PHI } from '../constants';
-import { DNSRecord } from '../types';
+import { PHI, QHTTP_NODES } from '../constants';
+import { DNSRecord, NodeDNSConfig } from '../types';
 
 export class DNSEngine {
   private static INITIAL_RECORDS: DNSRecord[] = [
@@ -12,6 +12,16 @@ export class DNSEngine {
 
   static getInitialRecords(): DNSRecord[] {
     return [...this.INITIAL_RECORDS];
+  }
+
+  static getInitialNodeConfigs(): NodeDNSConfig[] {
+    return QHTTP_NODES.map(node => ({
+      nodeId: node.id,
+      primaryResolver: '0.0.0.Ω',
+      recursiveDepth: 3,
+      cacheTTL: Math.floor(PHI * 100),
+      encryptionMode: 'ZKP_STEALTH'
+    }));
   }
 
   /**
