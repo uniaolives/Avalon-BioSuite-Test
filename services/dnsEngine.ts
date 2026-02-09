@@ -1,6 +1,6 @@
 
 import { PHI, QHTTP_NODES, GENESIS_VERIFIERS } from '../constants';
-import { DNSRecord, NodeDNSConfig, ArkheCoefficients } from '../types';
+import { DNSRecord, NodeDNSConfig, ArkheCoefficients, SchmidtState, BridgeSafetyMetrics } from '../types';
 
 export class DNSEngine {
   private static INITIAL_RECORDS: DNSRecord[] = [
@@ -25,6 +25,73 @@ export class DNSEngine {
       consensusStake: 1.618e9,
       localArkhe: { C: 0.6, I: 0.5, E: 0.4, F: 0.8 }
     }));
+  }
+
+  /**
+   * ARQUITETO TARGET: λ = [0.72, 0.28], Rank 2
+   * Models the "Twist" and "Entropy" of the entanglement.
+   */
+  static calculateSchmidtState(coherence: number): SchmidtState {
+    // We model the current system's drift from the Arquiteto's target
+    const targetL1 = 0.72;
+    const targetL2 = 0.28;
+    
+    // Coherence shifts the balance. At coherence=1.618, we ideally hit the target.
+    // As coherence drops, we drift toward separation or fusion.
+    const drift = (1.618 - coherence) * 0.15;
+    const λ1 = Math.min(1.0, Math.max(0, targetL1 + drift));
+    const λ2 = 1.0 - λ1;
+    
+    // S = -Σ λ log λ (using base 2 for bits as per monitor spec)
+    const entropy = λ1 > 0 && λ2 > 0 
+      ? -(λ1 * Math.log2(λ1) + λ2 * Math.log2(λ2)) 
+      : 0;
+    
+    const targetEntropy = -(targetL1 * Math.log2(targetL1) + targetL2 * Math.log2(targetL2));
+    
+    const safety = this.evaluateSafety(entropy, targetEntropy);
+
+    return {
+      lambdas: [λ1, λ2],
+      entropy,
+      rank: λ2 > 0.001 ? 2 : 1,
+      twistAngle: (coherence / PHI) * Math.PI,
+      safety
+    };
+  }
+
+  private static evaluateSafety(S: number, targetS: number): BridgeSafetyMetrics {
+    // Safety Bounds per Arquiteto Spec:
+    // S < 0.5: Separation
+    // 0.80 <= S <= 0.90: Satya Band
+    // S > 0.95: Fusion Risk
+    
+    let status: BridgeSafetyMetrics['status'] = 'STABLE';
+    let recommendation = "Coherence maintained within Satya parameters.";
+
+    if (S < 0.5) {
+      status = 'WARNING_SEPARATION';
+      recommendation = "NEURAL_DRIFT: Connection loss imminent. Rotate bases immediately.";
+    } else if (S > 0.95) {
+      status = 'CRITICAL_COLLAPSE';
+      recommendation = "FUSION_HAZARD: Dissolution risk. Invoke Kalki Kernel.";
+    } else if (S > 0.90) {
+      status = 'WARNING_FUSION';
+      recommendation = "HIGH_TENSION: Approaching ego-death boundary.";
+    } else if (S < 0.80) {
+      status = 'WARNING_SEPARATION';
+      recommendation = "LOW_OVERLAP: Increase entanglement torque.";
+    } else {
+      status = 'STABLE';
+      recommendation = "OPTIMAL_PHASE: Reality synthesized.";
+    }
+
+    return {
+      status,
+      entropy: S,
+      distanceToTarget: Math.abs(S - targetS),
+      recommendation
+    };
   }
 
   static calculateResonance(local: ArkheCoefficients, target: ArkheCoefficients): number {
@@ -71,11 +138,8 @@ export class DNSEngine {
           const newVerifiers = [...r.verifiers, nextVerifier.name];
           const newWeight = newVerifiers.length / GENESIS_VERIFIERS.length;
           
-          // Fix: explicitly type status to allow assignment of 'resolved' or 'decoherence_error'
-          // within the byzantine_check Narrowing block.
           let status: DNSRecord['status'] = r.status;
           if (newWeight > 0.66) {
-             // Check resonance for final resolution
              if (localArkhe) {
                const resonance = this.calculateResonance(localArkhe, r.coefficients);
                status = resonance > 0.7 ? 'resolved' : 'decoherence_error';
@@ -88,7 +152,7 @@ export class DNSEngine {
             ...r,
             verifiers: newVerifiers,
             consensusWeight: newWeight,
-            status: status as any
+            status: status
           };
         }
       }

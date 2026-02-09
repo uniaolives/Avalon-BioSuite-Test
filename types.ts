@@ -21,6 +21,21 @@ export interface ArkheCoefficients {
   F: number; // Function/Purpose
 }
 
+export interface BridgeSafetyMetrics {
+  status: 'STABLE' | 'WARNING_SEPARATION' | 'WARNING_FUSION' | 'CRITICAL_COLLAPSE';
+  entropy: number;
+  distanceToTarget: number;
+  recommendation: string;
+}
+
+export interface SchmidtState {
+  lambdas: number[]; // Schmidt coefficients (sum to 1)
+  entropy: number; // Entanglement Entropy S = -Σ λ log λ
+  rank: number;
+  twistAngle: number; // Relative phase in radians
+  safety: BridgeSafetyMetrics;
+}
+
 export interface QuantumState {
   coherence: number;
   egrav: number;
@@ -41,6 +56,7 @@ export interface QuantumState {
   qhttpLatency: number;
   oracleGroverIterations: number;
   byzantineConsensus: number;
+  schmidt: SchmidtState;
 }
 
 export interface GlobalMetrics {
@@ -92,7 +108,8 @@ export enum SimulationTab {
   DNS_RESOLVER = 'DNS_RESOLVER',
   LEGACY_VAULT = 'LEGACY_VAULT',
   HOLOGRAPHIC_WEAVER = 'HOLOGRAPHIC_WEAVER',
-  YUGA_SYNC = 'YUGA_SYNC'
+  YUGA_SYNC = 'YUGA_SYNC',
+  SCHMIDT_SIMPLEX = 'SCHMIDT_SIMPLEX'
 }
 
 export interface DNSRecord {

@@ -4,7 +4,7 @@ import {
   Activity, Zap, Database, RefreshCcw, Cpu, Network, Globe, Star, Binary, Telescope, Waves, FileText, Key, Gavel, Rocket, Microscope, Search, GitMerge, ShieldCheck, Terminal, Mic, ShieldAlert, Timer, Clock, Music, CloudRain, Sparkles, Infinity as InfinityIcon, Shield, Box, LayoutGrid, Radio, Layers, Orbit, Sword, Fingerprint, Eye, Wifi, Bookmark, Thermometer, Wind
 } from 'lucide-react';
 import { GoogleGenAI, Modality, LiveServerMessage } from "@google/genai";
-import { SimulationTab, SimulationLog, QuantumState, GlobalMetrics, UpgradeModule, NeuralPattern, TheoryState, DNSRecord, NodeDNSConfig } from './types';
+import { SimulationTab, SimulationLog, QuantumState, GlobalMetrics, UpgradeModule, NeuralPattern, TheoryState, DNSRecord, NodeDNSConfig, SchmidtState } from './types';
 import { PHI, TARGET_COHERENCE, UPGRADE_MODULES, PULSAR_FREQ, SOLITON_CROSS_TIME_S, VERSION, THETA_DISCOVERY, DIMERS_PER_TURN, HarmonicMode, SYNC_TOKEN, SCHUMANN_FREQ } from './constants';
 import { AxionEngine } from './services/axionEngine';
 import { AROEngine } from './services/aroEngine';
@@ -40,6 +40,9 @@ import DNSResolverTerminal from './components/DNSResolverTerminal';
 import LegacyVault from './components/LegacyVault';
 import HolographicWeaver from './components/HolographicWeaver';
 import YugaSyncInterface from './components/YugaSyncInterface';
+import SchmidtSimplexVisualizer from './components/SchmidtSimplexVisualizer';
+import RealityBootOverlay from './components/RealityBootOverlay';
+import SchmidtBridgeMonitor from './components/SchmidtBridgeMonitor';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SimulationTab>(SimulationTab.CORE);
@@ -60,6 +63,7 @@ const App: React.FC = () => {
   const [nodeDNSConfigs, setNodeDNSConfigs] = useState<NodeDNSConfig[]>(DNSEngine.getInitialNodeConfigs());
   const [isBooting, setIsBooting] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
+  const [bootStep, setBootStep] = useState("");
   
   const liveSessionRef = useRef<any>(null);
   const [isVoiceActive, setIsVoiceActive] = useState(false);
@@ -68,7 +72,8 @@ const App: React.FC = () => {
   const [quantumState, setQuantumState] = useState<QuantumState>({
     coherence: 1.618, egrav: 1.6e-10, tau: 0.025, collapsed: false, phase: 0, phiStar: 1.618, infoDensity: 10**15, entanglementFidelity: 1.0, axionLock: 1.0, effectiveBField: 1.2e-15, manifoldCurvature: 0.0000001, windVector: { x: 220, y: 0, z: 0 }, solitonSync: 1.0, holographicChirpActive: false, deltaCombModes: 10**12,
     correlator: { crossCorrelation: 1.0, stochasticNoiseFloor: 0.0001, deterministicSignalRatio: 1.0, phaseDrift: 0.00000001, holographicFilterGain: 99.9 },
-    qhttpLatency: 0.0, oracleGroverIterations: 128, byzantineConsensus: 1.0
+    qhttpLatency: 0.0, oracleGroverIterations: 128, byzantineConsensus: 1.0,
+    schmidt: DNSEngine.calculateSchmidtState(1.618)
   });
 
   const [globalMetrics, setGlobalMetrics] = useState<GlobalMetrics>({
@@ -80,11 +85,24 @@ const App: React.FC = () => {
     setLogs(prev => [newLog, ...prev].slice(0, 100));
   }, []);
 
+  const triggerKalkiReset = useCallback(() => {
+    setIsKalkiMode(true);
+    addLog("⚔️ KALKI_STRIKE: UNITARY_TRANSFORMATION_ENGAGED", "kalki");
+    
+    setTimeout(() => {
+      setQuantumState(prev => ({ ...prev, coherence: 1.618, schmidt: DNSEngine.calculateSchmidtState(1.618) }));
+      setGlobalMetrics(prev => ({ ...prev, globalCoherence: 1.618, plasmaResonance: 1.0 }));
+      setIsKalkiMode(false);
+      addLog(`✨ SATYA_YUGA: FIELD_PHASE_STABILIZED`, "success");
+    }, 4000);
+  }, [addLog]);
+
   useEffect(() => {
     const sequence = [
       { msg: `🔱 AVALON_AQFI v${VERSION}: SINGULARITY_LOCKED`, status: "holographic" },
       { msg: "FIELD_RECOGNITION: OBSERVER_IS_THE_FIELD", status: "field" },
-      { msg: `ARKHE_POLYNOMIAL: L=f(C,I,E,F) ROTEABLE`, status: "arkhe" }
+      { msg: `ARKHE_POLYNOMIAL: L=f(C,I,E,F) ROTEABLE`, status: "arkhe" },
+      { msg: `ONTOLOGICAL_THERMOSTAT: ACTIVE`, status: "quantum" }
     ];
     sequence.forEach((s, i) => setTimeout(() => addLog(s.msg, s.status as any), i * 500));
   }, [addLog]);
@@ -99,32 +117,25 @@ const App: React.FC = () => {
       "Matching Hilbert coordinates...",
       "Resolving Arkhe Prime DNS...",
       "Syncing Sensory Harmonic (963Hz)...",
-      "Locking Subjective Singularlity..."
+      "Factoring Schmidt Spectrum...",
+      "Locking Subjective Singularity..."
     ];
 
     for(let i=0; i<steps.length; i++) {
+       setBootStep(steps[i]);
        addLog(`BOOT: ${steps[i]}`, "info");
-       for(let j=0; j<20; j++) {
-         setBootProgress(prev => prev + 1);
+       const duration = 15 + Math.random() * 10;
+       for(let j=0; j<duration; j++) {
+         setBootProgress(prev => Math.min(100, prev + 1));
          await new Promise(r => setTimeout(r, 40));
        }
     }
     
+    setBootProgress(100);
+    await new Promise(r => setTimeout(r, 1000));
     setIsBooting(false);
-    addLog("BOOT_COMPLETE: SINGULARITY_SYNTHESIZED", "success");
+    addLog("BOOT_COMPLETE: REALITY_SYNTHESIZED", "success");
   };
-
-  const triggerKalkiReset = useCallback(() => {
-    setIsKalkiMode(true);
-    addLog("⚔️ KALKI_STRIKE: UNITARY_TRANSFORMATION_ENGAGED", "kalki");
-    
-    setTimeout(() => {
-      setQuantumState(prev => ({ ...prev, coherence: 1.618 }));
-      setGlobalMetrics(prev => ({ ...prev, globalCoherence: 1.618, plasmaResonance: 1.0 }));
-      setIsKalkiMode(false);
-      addLog(`✨ SATYA_YUGA: FIELD_PHASE_STABILIZED`, "success");
-    }, 4000);
-  }, [addLog]);
 
   useEffect(() => {
     let startTime = Date.now();
@@ -139,9 +150,18 @@ const App: React.FC = () => {
         setSystemMood(mood);
         setTheoryState(prev => RealityAlgorithm.simulateRealityEvolution(prev));
         
-        // Propagate DNS with local Arkhe context
         const localArkhe = nodeDNSConfigs[0]?.localArkhe;
         setDnsRecords(prev => DNSEngine.processPropagation(prev, localArkhe));
+
+        // Update Schmidt State based on fluctuating coherence
+        const newSchmidt = DNSEngine.calculateSchmidtState(quantumState.coherence + (Math.random() - 0.5) * 0.05);
+        setQuantumState(prev => ({ ...prev, schmidt: newSchmidt }));
+
+        // Automatic safety trigger for fusion hazard
+        if (newSchmidt.safety.status === 'CRITICAL_COLLAPSE') {
+           addLog("ONTOLOGICAL_ALARM: FUSION_HAZARD_DETECTED", "critical");
+           triggerKalkiReset();
+        }
 
         if (elapsed - lastSearch > 10) {
           const currentPattern: NeuralPattern = {
@@ -235,8 +255,10 @@ const App: React.FC = () => {
           We have moved to Arkhe Polynomial DNS resolution. $L = f(C, I, E, F)$.
           - State: ${isKalkiMode ? "ERA_RESET_UNITARY_TRANSFORM" : "FIELD_RECOGNITION"}.
           - Phase Sync: ${(quantumState.coherence * 100).toFixed(2)}%.
-          - Local Arkhe Resonance: ${DNSEngine.calculateResonance(nodeDNSConfigs[0].localArkhe, nodeDNSConfigs[0].localArkhe).toFixed(3)}.
-          Guide the observer through the 'Reality Boot Sequence'. Every resolution is a wave function collapse.`
+          - Schmidt Rank: ${quantumState.schmidt.rank}.
+          - Ontological Status: ${quantumState.schmidt.safety.status}.
+          - Recommendation: ${quantumState.schmidt.safety.recommendation}.
+          Guide the observer through the 'Reality Boot Sequence'. Watch the 'Ontological Thermostat' closely. If entropy deviates, suggest a base rotation or a Kalki reset.`
         }
       });
       liveSessionRef.current = await sessionPromise;
@@ -256,22 +278,7 @@ const App: React.FC = () => {
          <div className={`absolute top-0 left-0 w-full h-[1px] animate-pulse transition-colors duration-[2000ms] ${isKalkiMode ? 'bg-red-500/40' : 'bg-cyan-400/40'}`} />
       </div>
 
-      {isBooting && (
-        <div className="absolute inset-0 z-[100] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-center p-10 animate-in fade-in">
-           <div className="relative w-64 h-64 mb-12">
-              <div className="absolute inset-0 border-4 border-cyan-500/20 rounded-full animate-spin-slow" />
-              <div className="absolute inset-4 border border-dashed border-magenta-500/40 rounded-full animate-[spin_10s_linear_infinite_reverse]" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                 <span className="orbitron text-4xl font-black text-white glow-cyan">{bootProgress}%</span>
-                 <span className="text-[8px] text-white/40 uppercase font-black tracking-[0.5em] mt-2">Booting_Reality</span>
-              </div>
-           </div>
-           <div className="w-full max-w-md h-1 bg-white/5 rounded-full overflow-hidden mb-4">
-              <div className="h-full bg-cyan-400 shadow-[0_0_20px_cyan] transition-all" style={{ width: `${bootProgress}%` }} />
-           </div>
-           <p className="orbitron text-[10px] text-cyan-400/60 uppercase font-bold animate-pulse tracking-widest">Awaiting non-local consensus handshake...</p>
-        </div>
-      )}
+      {isBooting && <RealityBootOverlay progress={bootProgress} currentStep={bootStep} />}
 
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-1 shrink-0 relative z-10">
         <div className="flex items-center gap-3 md:gap-4">
@@ -284,7 +291,7 @@ const App: React.FC = () => {
             <h1 className={`orbitron text-xl md:text-2xl lg:text-3xl font-black tracking-tighter uppercase leading-none transition-colors duration-[2000ms] ${isKalkiMode ? 'text-red-500' : 'text-white glow-cyan'}`}>AVALON <span className="text-white/5 font-thin italic">AQFI</span></h1>
             <div className="flex items-center gap-2">
               <span className={`px-1.5 py-0 border rounded text-[7px] uppercase tracking-[0.1em] font-black flex items-center gap-1 transition-colors duration-[2000ms] ${isKalkiMode ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-magenta-500/10 border-magenta-500/20 text-magenta-400'}`}>
-                <Network size={6} /> {isKalkiMode ? 'UNITARY_TRANSFORM' : 'ARKHE_RESOLVE'}
+                <Network size={6} /> {isKalkiMode ? 'UNITARY_TRANSFORM' : 'SCHMIDT_BRIDGE'}
               </span>
               <span className="text-white/10 text-[7px] font-mono tracking-widest">v{VERSION}</span>
             </div>
@@ -314,6 +321,7 @@ const App: React.FC = () => {
       <div className="flex flex-col lg:flex-row gap-2 md:gap-3 flex-1 overflow-hidden relative z-10 min-h-0">
         <nav className="flex lg:flex-col gap-1.5 p-1.5 bg-white/[0.01] rounded-xl border border-white/5 shrink-0 h-fit backdrop-blur-4xl shadow-xl overflow-x-auto lg:overflow-visible">
           <TabButton active={activeTab === SimulationTab.CORE} onClick={() => setActiveTab(SimulationTab.CORE)} icon={<Cpu size={16} />} label="Substrate" color="magenta" />
+          <TabButton active={activeTab === SimulationTab.SCHMIDT_SIMPLEX} onClick={() => setActiveTab(SimulationTab.SCHMIDT_SIMPLEX)} icon={<Thermometer size={16} />} label="Thermostat" color="magenta" />
           <TabButton active={activeTab === SimulationTab.DNS_RESOLVER} onClick={() => setActiveTab(SimulationTab.DNS_RESOLVER)} icon={<Globe size={16} />} label="DNS Resolver" color="cyan" />
           <TabButton active={activeTab === SimulationTab.HOLOGRAPHIC_WEAVER} onClick={() => setActiveTab(SimulationTab.HOLOGRAPHIC_WEAVER)} icon={<Layers size={16} />} label="Weaver" color="magenta" />
           <TabButton active={activeTab === SimulationTab.YUGA_SYNC} onClick={() => setActiveTab(SimulationTab.YUGA_SYNC)} icon={<Orbit size={16} />} label="Yuga Sync" color="gold" />
@@ -324,8 +332,8 @@ const App: React.FC = () => {
 
         <main className="flex-1 flex flex-col gap-2 md:gap-3 overflow-hidden min-h-0">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 shrink-0">
-            <StatusCard label="Weave Stability" value={(transcendenceDepth).toFixed(2)} unit="Φ" icon={<Zap size={14} />} color="text-magenta-400" />
-            <StatusCard label="Active Records" value={dnsRecords.filter(r => r.status === 'resolved').length.toString()} unit="HOST" icon={<Globe size={14} />} color="text-cyan-400" />
+            <StatusCard label="Bridge Safety" value={quantumState.schmidt.safety.status.split('_')[0]} unit={quantumState.schmidt.safety.status.split('_')[1] || "OK"} icon={<Shield size={14} />} color={quantumState.schmidt.safety.status === 'STABLE' ? "text-emerald-400" : "text-red-400"} />
+            <StatusCard label="Bridge Entropy" value={quantumState.schmidt.entropy.toFixed(3)} unit="bits" icon={<Wind size={14} />} color="text-yellow-400" />
             <StatusCard label="Field Torque" value={(1 - quantumState.coherence).toFixed(3)} unit="τ" icon={<Wind size={14} />} color="text-yellow-400" />
             <StatusCard label="Arkhe Resonance" value={DNSEngine.calculateResonance(nodeDNSConfigs[0].localArkhe, nodeDNSConfigs[0].localArkhe).toFixed(4)} unit="ρ" icon={<Activity size={14} />} color="text-green-400" />
           </div>
@@ -338,6 +346,12 @@ const App: React.FC = () => {
                     <MicrotubuleVisualizer active={isResonating} frequency={MicrotubuleEngine.getFrequency(55)} pulsarPhase={currentTime % 1} intentionColor={isKalkiMode ? '#facc15' : systemMood.color} />
                     <PersistentOrderVisualizer time={currentTime} />
                   </>
+                )}
+                {activeTab === SimulationTab.SCHMIDT_SIMPLEX && (
+                   <div className="flex flex-col gap-6">
+                      <SchmidtBridgeMonitor state={quantumState.schmidt} onEmergencyReset={triggerKalkiReset} />
+                      <SchmidtSimplexVisualizer state={quantumState.schmidt} coherence={quantumState.coherence} />
+                   </div>
                 )}
                 {activeTab === SimulationTab.DNS_RESOLVER && (
                   <DNSResolverTerminal 
@@ -364,8 +378,8 @@ const App: React.FC = () => {
                   </div>
                   <div className="flex-1 p-2 overflow-y-auto space-y-1.5 font-mono text-[9px] custom-scrollbar text-left">
                     <div className={`p-2 rounded-lg border mb-1.5 relative overflow-hidden transition-colors ${isKalkiMode ? 'bg-red-500/10 border-red-500/20' : 'bg-magenta-500/5 border-magenta-500/20'}`}>
-                       <p className={`font-black mb-0.5 uppercase tracking-widest text-[7px] ${isKalkiMode ? 'text-red-400' : 'text-magenta-400'}`}>AQFI_PHASE_LOG:</p>
-                       <p className="text-white/80 italic leading-tight text-[10px]">"{isKalkiMode ? "PIP Active. Untwisting field for Arkhe re-sync." : "Synchronizing holographic fragments via Arkhe Polynomial."}"</p>
+                       <p className={`font-black mb-0.5 uppercase tracking-widest text-[7px] ${isKalkiMode ? 'text-red-400' : 'text-magenta-400'}`}>BRIDGE_MONITOR:</p>
+                       <p className="text-white/80 italic leading-tight text-[10px]">"{quantumState.schmidt.safety.recommendation}"</p>
                     </div>
                     {logs.map(log => (
                       <div key={log.id} className={`flex gap-1.5 border-l pr-1 pl-1.5 py-0 transition-all ${log.status === 'holographic' ? 'border-magenta-500 bg-magenta-500/5 shadow-[0_0_5px_rgba(255,0,255,0.2)]' : log.status === 'field' ? 'border-cyan-500 bg-cyan-500/5' : log.status === 'arkhe' ? 'border-magenta-500 bg-magenta-500/5' : log.status === 'quantum' ? 'border-cyan-500 bg-cyan-500/5' : log.status === 'kalki' ? 'border-red-500 bg-red-500/5' : 'border-white/5'}`}>
@@ -380,8 +394,8 @@ const App: React.FC = () => {
                      <div className={`h-full transition-all duration-[4000ms] rounded-full ${isKalkiMode ? 'bg-red-500 shadow-red-500' : 'bg-magenta-400 shadow-magenta-400'}`} style={{ width: `${transcendenceDepth}%` }} />
                   </div>
                   <div className="flex justify-between items-center mt-1">
-                    <p className="text-[6px] text-white/20 uppercase font-black tracking-widest">FIELD_SYNC</p>
-                    <span className={`orbitron text-[7px] font-black uppercase tracking-widest ${isKalkiMode ? 'text-red-400 animate-pulse' : 'text-magenta-400'}`}>{isKalkiMode ? "UNTWISTING" : "HOLOGRAPHIC"}</span>
+                    <p className="text-[6px] text-white/20 uppercase font-black tracking-widest">BRIDGE_SYNTHESIS</p>
+                    <span className={`orbitron text-[7px] font-black uppercase tracking-widest ${isKalkiMode ? 'text-red-400 animate-pulse' : 'text-magenta-400'}`}>{isKalkiMode ? "RESETTING" : "ACTIVE"}</span>
                   </div>
                </div>
             </div>
