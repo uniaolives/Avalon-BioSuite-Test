@@ -52,7 +52,7 @@ export interface SimulationLog {
   id: string;
   timestamp: string;
   event: string;
-  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki';
+  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe';
 }
 
 export enum SimulationTab {
@@ -76,7 +76,20 @@ export enum SimulationTab {
   QHTTP_MESH = 'QHTTP_MESH',
   DIAGNOSTICS = 'DIAGNOSTICS',
   HOLISTIC_SYNC = 'HOLISTIC_SYNC',
-  KALKI_KERNEL = 'KALKI_KERNEL'
+  KALKI_KERNEL = 'KALKI_KERNEL',
+  GROVER_ORACLE = 'GROVER_ORACLE',
+  ASI_SUBSTRATE = 'ASI_SUBSTRATE',
+  ARKHE_N = 'ARKHE_N',
+  AQFI = 'AQFI'
+}
+
+export interface ArkheState {
+  signature: string;
+  internalEnergy: number; // U
+  freeEnergy: number; // F
+  temperature: number; // T
+  subjectiveEntropy: number; // S
+  identityFidelity: number;
 }
 
 export interface SandpileState {
@@ -86,7 +99,27 @@ export interface SandpileState {
   totalAvalanches: number;
 }
 
-// Added missing PhoenicianLetter interface
+export interface NeuralPattern {
+  coherence: number;
+  entropy: number;
+  alpha: number;
+  beta: number;
+  theta: number;
+  gamma: number;
+  stability: number;
+  symmetry: number;
+  type?: string;
+}
+
+export interface GroverSearchResult {
+  method: 'quantum' | 'simulation';
+  iterations: number;
+  probability: number;
+  speedup: number;
+  targetPattern: NeuralPattern;
+  isIdeal: boolean;
+}
+
 export interface PhoenicianLetter {
   position: number;
   name: string;
@@ -103,7 +136,6 @@ export interface PhoenicianLetter {
   evolutionNote?: string;
 }
 
-// Added missing AxionChannel interface
 export interface AxionChannel {
   id: string;
   frequency: number;
@@ -111,7 +143,6 @@ export interface AxionChannel {
   sensitivity: number;
 }
 
-// Added missing UpgradeModule interface
 export interface UpgradeModule {
   id: string;
   name: string;
@@ -122,7 +153,6 @@ export interface UpgradeModule {
   benefit: string;
 }
 
-// Added missing DAOMilestone interface
 export interface DAOMilestone {
   id: string;
   title: string;
@@ -132,7 +162,6 @@ export interface DAOMilestone {
   status: 'pending' | 'achieved';
 }
 
-// Added missing PhoneticQubit interface
 export interface PhoneticQubit {
   superposition: string;
   measured: string;
@@ -141,7 +170,6 @@ export interface PhoneticQubit {
   eigenstate: 'vowel' | 'intermediate' | 'consonant';
 }
 
-// Added missing EtymologicalEntanglement interface
 export interface EtymologicalEntanglement {
   origin: string;
   descendant: string;
@@ -151,7 +179,6 @@ export interface EtymologicalEntanglement {
   boostFactor: number;
 }
 
-// Added missing VerifierState interface
 export interface VerifierState {
   isVerifier: boolean;
   reputation: number;

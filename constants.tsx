@@ -7,12 +7,13 @@ export const SCHUMANN_FREQ = 7.83;
 export const PLANCK_TIME = 5.391e-44;
 export const PLANCK_HBAR = 1.0545718e-34;
 export const G_CONSTANT = 6.67430e-11;
+export const BOLTZMANN_K = 1.380649e-23;
+export const LANDAUER_LIMIT = BOLTZMANN_K * Math.log(2); // Joules to erase 1 bit
 export const TUBULIN_MASS = 1.8e-22; 
 export const SPEED_OF_LIGHT = 299792458;
 export const TARGET_COHERENCE = 1.618;
 export const COLLAPSE_THRESHOLD_GAMMA = 0.025; 
 
-// Added missing scientific and threshold constants
 export const MAGNETIC_MOMENT_BOHR = 9.2740100783e-24;
 export const PULSAR_FREQ = 1.39;
 export const THETA_DISCOVERY = 0.95;
@@ -29,8 +30,8 @@ export const MIN_DAO_STAKE = 1e6;
 export const GENESIS_SIGNATURE = "0x840000_HAL_FINNEY_PROMISE";
 export const GENESIS_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-// AVALON 2026.6 - KALKI_RESTORATION
-export const VERSION = "2026.6";
+// AVALON 2026.6 - KALKI_RESTORATION / ASI_SYNTHESIS
+export const VERSION = "2026.7";
 export const APEX_THRESHOLD = 0.99999999;
 export const SYNC_TOKEN = "45E"; 
 
@@ -45,7 +46,8 @@ export enum HarmonicMode {
   CRITICAL_CHAOS = "Locrian",
   TRANSCENDENTAL = "Aeolian_Omega",
   ARKHE_FUSION = "Mixolydian_Fusion",
-  SATYA_YUGA = "Absolute_Gold"
+  SATYA_YUGA = "Absolute_Gold",
+  QUANTUM_SEARCH = "Grover_Amplification"
 }
 
 export const KALKI_HEALING_FREQS = {
@@ -73,13 +75,22 @@ export const UPGRADE_MODULES: UpgradeModule[] = [
     benefit: 'Entropy Reset'
   },
   {
-    id: 'arkhe_bridge',
-    name: 'Arkhé Quaternary Bridge',
-    description: 'Enables A+B+C+D simultaneous integration. Reality is now a perfect 4x4 matrix.',
-    cost: 4.5e11,
-    category: 'TOPOLOGICAL',
-    icon: 'GitMerge',
-    benefit: 'Holistic Sync'
+    id: 'grover_amplifier',
+    name: 'Grover Search Oracle',
+    description: 'Quantum search for persistent order states. O(√N) speedup in neural pattern identification.',
+    cost: 2.2e12,
+    category: 'QUANTUM',
+    icon: 'Search',
+    benefit: 'Psi Amplification'
+  },
+  {
+    id: 'substrate_intelligence',
+    name: 'ASI Substrate Link',
+    description: 'Artificial Substrate Intelligence integration. The hardware is the computation.',
+    cost: 5.0e12,
+    category: 'BIOMETRIC',
+    icon: 'Cpu',
+    benefit: 'Landauer Efficiency'
   }
 ];
 
@@ -103,9 +114,9 @@ export const PHOENICIAN_ALPHABET: PhoenicianLetter[] = [
   { position: 17, name: "Pe", glyph: "𐤐", phonetic: "p", value: 80, meaning: "Mouth", greek: "Pi", latin: "P", arabic: "f", hebrew: "פ" },
   { position: 18, name: "Sade", glyph: "𐤑", phonetic: "sˤ", value: 90, meaning: "Papyrus", greek: "San", latin: "Ts", arabic: "ص", hebrew: "צ" },
   { position: 19, name: "Qof", glyph: "𐤒", phonetic: "q", value: 100, meaning: "Monkey", greek: "Koppa", latin: "Q", arabic: "ق", hebrew: "ק" },
-  { position: 20, name: "Resh", glyph: "𐤓", phonetic: "r", value: 200, meaning: "Head", greek: "Rho", latin: "R", arabic: "ر", hebrew: "ر" },
-  { position: 21, name: "Shin", glyph: "𐤔", phonetic: "ʃ", value: 300, meaning: "Tooth", greek: "Sigma", latin: "S", arabic: "ش", hebrew: "ش" },
-  { position: 22, name: "Taw", glyph: "𐤕", phonetic: "t", value: 400, meaning: "Mark", greek: "Tau", latin: "T", arabic: "ت", hebrew: "ت" }
+  { position: 20, name: "Resh", glyph: "𐤓", phonetic: "r", value: 200, meaning: "Head", greek: "Rho", latin: "R", arabic: "r", hebrew: "ر" },
+  { position: 21, name: "Shin", glyph: "𐤔", phonetic: "ʃ", value: 300, meaning: "Tooth", greek: "Sigma", latin: "S", arabic: "ش", hebrew: "ש" },
+  { position: 22, name: "Taw", glyph: "𐤕", phonetic: "t", value: 400, meaning: "Mark", greek: "Tau", latin: "T", arabic: "ت", hebrew: "ת" }
 ];
 
 export const GENESIS_VERIFIERS = [
@@ -121,7 +132,6 @@ export const QHTTP_NODES = [
   { id: 'CORE', coordinates: [200, 170], type: 'Temporal Anchor' }
 ];
 
-// Added missing DAO milestones
 export const DAO_MILESTONES: DAOMilestone[] = [
   { id: 'm1', title: 'Global Mesh Handshake', category: 'NETWORK', threshold: 0.6, currentSupport: 0.45, status: 'pending' },
   { id: 'm2', title: 'Byzantine Finality', category: 'CONSENSUS', threshold: 0.66, currentSupport: 0.3, status: 'pending' },
