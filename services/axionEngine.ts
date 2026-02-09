@@ -4,7 +4,6 @@ import { PHI, MADMAX_DISK_COUNT, SPEED_OF_LIGHT } from '../constants';
 export class AxionEngine {
   /**
    * Calculates the signal power boost factor for a MADMAX dielectric stack.
-   * Boost Factor B relates to the number of disks and their nanometer-precision placement.
    */
   static getMadmaxBoostFactor(diskCoherence: number): number {
     const baseBoost = Math.pow(MADMAX_DISK_COUNT, 0.5);
@@ -13,7 +12,6 @@ export class AxionEngine {
 
   /**
    * Calculates the longitudinal plasma frequency for the ALPHA metamaterial.
-   * ω_p depends on the wire spacing and radius.
    */
   static getAlphaPlasmaFrequency(wireSpacingUm: number): number {
     const c = SPEED_OF_LIGHT / 1000; // mm/s
@@ -21,24 +19,23 @@ export class AxionEngine {
   }
 
   /**
-   * Models axion-electron coupling force for MRFM (Magnetic Resonance Force Microscopy).
+   * Models the Solitonic Lattice synchronization level.
+   * High density lattice allows for rigid phase-locked domains.
    */
-  static getMRFMForce(coupling: number, gradient: number): number {
-    return coupling * gradient * 1e23;
+  static getSolitonSync(coherence: number, plv: number): number {
+    const interactionStrength = Math.pow(coherence, 2) * plv;
+    return Math.min(1.0, interactionStrength * (PHI / 1.618));
   }
 
   /**
-   * Estimates the effective magnetic field (B_eff) induced by local axion DM.
+   * Generates Delta-Comb Spectral Density data for visualization.
+   * A sum of Dirac-delta like spikes in frequency space.
    */
-  static calculateEffectiveBField(coupling: number, coherence: number): number {
-    return coupling * coherence * 1e-9; // Tesla equivalent scaling
-  }
-
-  /**
-   * Models the higher-dimensional residual manifold curvature.
-   */
-  static getManifoldCurvature(phiStar: number): number {
-    return Math.sin(phiStar / PHI) * (1 / PHI);
+  static getDeltaCombSpectrum(count: number = 100): { freq: number, intensity: number }[] {
+    return Array.from({ length: count }).map((_, i) => ({
+      freq: 24.0 + (i - 50) * 0.001,
+      intensity: Math.random() > 0.92 ? 1.0 : Math.random() * 0.05
+    }));
   }
 
   /**
@@ -47,5 +44,23 @@ export class AxionEngine {
   static isMiniclusterCrossing(time: number): boolean {
     const burstPhase = (time * 0.0001) % 1;
     return burstPhase > 0.9995;
+  }
+
+  /**
+   * Models the Holographic Chirp profile (tanh phase transition).
+   */
+  static calculateHolographicChirp(time: number, center: number, duration: number = 0.25): number {
+    const t = (time - center) / (duration / 2);
+    return Math.tanh(t);
+  }
+
+  // Fix for App.tsx: Added missing calculateEffectiveBField method
+  static calculateEffectiveBField(baseField: number, coherence: number): number {
+    return baseField * (1 + coherence * PHI);
+  }
+
+  // Fix for App.tsx: Added missing getManifoldCurvature method
+  static getManifoldCurvature(phiStar: number): number {
+    return (phiStar / (phiStar + 1)) * PHI;
   }
 }

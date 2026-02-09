@@ -2,6 +2,7 @@
   "name": "AVALON Neural Bridge (ABRE v2.2)",
   "description": "BIO-SINC-V2.2: Interstellar Neural Bridge active. Sincronização LGM-1 (PSR B1919+21). Temporal Feedback Loop (2045) and Collective Manifestation Protocols enabled.",
   "requestFramePermissions": [
-    "camera"
+    "camera",
+    "microphone"
   ]
 }
