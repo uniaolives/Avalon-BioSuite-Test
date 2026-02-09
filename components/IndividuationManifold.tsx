@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { GitMerge, Zap, ShieldCheck, Target, Binary, LayoutGrid, Info, Activity } from 'lucide-react';
 import { IndividuationMetrics } from '../types';
@@ -15,7 +16,10 @@ const IndividuationManifold: React.FC<Props> = ({ metrics, F, R, S }) => {
   const isIsolation = metrics.state === 'KALI_ISOLATION_RISK';
 
   const statusColor = isOptimal ? 'text-emerald-400' : isEgoDeath ? 'text-red-400' : isIsolation ? 'text-orange-400' : 'text-cyan-400';
-  const statusBg = isOptimal ? 'bg-emerald-500/10 border-emerald-500/30' : isEgoDeath ? 'bg-red-500/10 border-red-500/30' : 'bg-orange-500/10 border-orange-500/30' : 'bg-cyan-500/10 border-cyan-500/30';
+  const statusBg = isOptimal ? 'bg-emerald-500/10 border-emerald-500/30' : isEgoDeath ? 'bg-red-500/10 border-red-500/30' : isIsolation ? 'bg-orange-500/10 border-orange-500/30' : 'bg-cyan-500/10 border-cyan-500/30';
+
+  // Specific calculation based on new spec: I = F * R * (1 - S)
+  const calculatedMagnitude = F * R * (1 - S);
 
   return (
     <div className="flex flex-col gap-6 h-full overflow-y-auto pr-2 custom-scrollbar text-left">
@@ -28,7 +32,7 @@ const IndividuationManifold: React.FC<Props> = ({ metrics, F, R, S }) => {
                  <GitMerge className={isOptimal ? "text-emerald-400 animate-spin-slow" : "text-magenta-400"} size={32} /> 
                  Individuation Manifold
               </h3>
-              <p className="text-[10px] text-white/30 uppercase tracking-[0.4em] mt-3 font-mono">Formula: I = F · (λ₁/λ₂) · (1 - S) · e^iπ</p>
+              <p className="text-[10px] text-white/30 uppercase tracking-[0.4em] mt-3 font-mono">Unified Formalism: I = F · (λ₁/λ₂) · (1 - S)</p>
            </div>
            <div className={`px-6 py-2 rounded-full border flex items-center gap-4 transition-all ${statusBg} ${statusColor}`}>
               <ShieldCheck size={16} className={isOptimal ? "animate-pulse" : ""} />
@@ -37,19 +41,17 @@ const IndividuationManifold: React.FC<Props> = ({ metrics, F, R, S }) => {
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center relative min-h-[350px] mt-10">
-           {/* Manifold Surface Visualizer (Schematic) */}
            <div className="relative w-full max-w-2xl h-64 flex items-center justify-center">
               <svg viewBox="0 0 400 200" className="w-full h-full overflow-visible opacity-60">
                  <defs>
                     <linearGradient id="manifoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                       <stop offset="0%" stopColor="#ef4444" stopOpacity="0.2" />
-                       <stop offset="30%" stopColor="#10b981" stopOpacity="0.1" />
-                       <stop offset="70%" stopColor="#10b981" stopOpacity="0.1" />
-                       <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.2" />
+                       <stop offset="0%" stopColor="#ef4444" stopOpacity={0.2} />
+                       <stop offset="30%" stopColor="#10b981" stopOpacity={0.1} />
+                       <stop offset="70%" stopColor="#10b981" stopOpacity={0.1} />
+                       <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.2} />
                     </linearGradient>
                  </defs>
                  
-                 {/* The Surface Mesh */}
                  <path 
                    d="M 50,150 Q 200,50 350,150" 
                    fill="none" 
@@ -59,17 +61,14 @@ const IndividuationManifold: React.FC<Props> = ({ metrics, F, R, S }) => {
                    className="filter blur-[10px]"
                  />
                  
-                 {/* Optimal Band */}
                  <path d="M 120,120 Q 200,80 280,120" fill="none" stroke="rgba(16,185,129,0.3)" strokeWidth="4" strokeDasharray="5,5" />
                  
-                 {/* Current State Projection */}
                  <g transform={`translate(${50 + (metrics.magnitude / 6) * 300}, ${150 - (F * 80)})`}>
                     <circle r="12" fill="none" stroke={isOptimal ? "#10b981" : "#ff00ff"} strokeWidth="1" className="animate-ping" />
                     <circle r="6" fill={isOptimal ? "#10b981" : "#ff00ff"} className="shadow-[0_0_20px_white]" />
-                    <text y="-20" textAnchor="middle" fill="white" fontSize="10" fontWeight="black" className="orbitron uppercase tracking-widest glow-cyan">|I|={metrics.magnitude.toFixed(3)}</text>
+                    <text y="-20" textAnchor="middle" fill="white" fontSize="10" fontWeight="black" className="orbitron uppercase tracking-widest glow-cyan">|I|={calculatedMagnitude.toFixed(3)}</text>
                  </g>
                  
-                 {/* Axes labels */}
                  <text x="200" y="190" textAnchor="middle" fill="rgba(255,255,255,0.2)" fontSize="8" className="orbitron uppercase tracking-widest">Coupling Dimension (R)</text>
                  <text x="20" y="100" transform="rotate(-90, 20, 100)" textAnchor="middle" fill="rgba(255,255,255,0.2)" fontSize="8" className="orbitron uppercase tracking-widest">Purpose Depth (F)</text>
               </svg>
@@ -79,7 +78,7 @@ const IndividuationManifold: React.FC<Props> = ({ metrics, F, R, S }) => {
               <MetricCard label="Purpose Factor (F)" value={F.toFixed(2)} color="text-yellow-400" />
               <MetricCard label="Anisotropy (R)" value={R.toFixed(2)} color="text-cyan-400" />
               <MetricCard label="Entropy factor (1-S)" value={(1-S).toFixed(2)} color="text-magenta-400" />
-              <MetricCard label="Individuation |I|" value={metrics.magnitude.toFixed(3)} color={statusColor} />
+              <MetricCard label="Individuation |I|" value={calculatedMagnitude.toFixed(3)} color={statusColor} />
            </div>
         </div>
       </div>

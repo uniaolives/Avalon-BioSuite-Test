@@ -37,12 +37,12 @@ import RealityBootOverlay from './components/RealityBootOverlay';
 import SchmidtBridgeMonitor from './components/SchmidtBridgeMonitor';
 import QuantumRabbitHoleDive from './components/QuantumRabbitHoleDive';
 import WorldSimulator from './components/WorldSimulator';
-import AcademicFormalization from './components/AcademicFormalization';
 import IndividuationManifold from './components/IndividuationManifold';
 import GlobalMeshMap from './components/GlobalMeshMap';
 import SaturnianOrchestrator from './components/SaturnianOrchestrator';
 import TitanHippocampus from './components/TitanHippocampus';
 import EnceladusHomeopase from './components/EnceladusHomeopase';
+import AcademicPaper from './components/AcademicPaper';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SimulationTab>(SimulationTab.DASHBOARD);
@@ -68,9 +68,6 @@ const App: React.FC = () => {
     depth: 0, fidelity: 0.0, flowState: 'MINIMAL_FLOW', activeLayers: []
   });
 
-  const liveSessionRef = useRef<any>(null);
-  const [isVoiceActive, setIsVoiceActive] = useState(false);
-
   const [quantumState, setQuantumState] = useState<QuantumState>({
     coherence: 1.618, egrav: 1.6e-10, tau: 0.025, collapsed: false, phase: 0, phiStar: 1.618, infoDensity: 10**15, entanglementFidelity: 1.0, axionLock: 1.0, effectiveBField: 1.2e-15, manifoldCurvature: 0.0000001, windVector: { x: 220, y: 0, z: 0 }, solitonSync: 1.0, holographicChirpActive: false, deltaCombModes: 10**12,
     correlator: { crossCorrelation: 1.0, stochasticNoiseFloor: 0.0001, deterministicSignalRatio: 1.0, phaseDrift: 0.00000001, holographicFilterGain: 99.9 },
@@ -78,7 +75,7 @@ const App: React.FC = () => {
     schmidt: DNSEngine.calculateSchmidtState(1.618, false, false),
     individuation: DNSEngine.calculateIndividuation(0.9, [0.7, 0.3], 0.61),
     timeCrystal: TimeCrystalEngine.getInitialMetrics(),
-    saturn: { ...SaturnianEngine.getInitialMetrics(), xiArkhe: 0.85 },
+    saturn: SaturnianEngine.getInitialMetrics(),
     titan: TitanEngine.getInitialMetrics(),
     enceladus: EnceladusEngine.getInitialMetrics()
   });
@@ -98,7 +95,8 @@ const App: React.FC = () => {
     const sequence = [
       { msg: `🔱 AVALON_AQFI v${VERSION}: SYSTEM_ACTIVE`, status: "quantum" },
       { msg: "TITAN_ACCESSED: HIPPOCAMPAL_DATA_SYNCING", status: "titan" },
-      { msg: `XI_ARKHE_CALIBRATED: DIALOGUE_PROTOCOL_SEALED`, status: "saturn" }
+      { msg: `XI_ARKHE_CALIBRATED: DIALOGUE_PROTOCOL_SEALED`, status: "saturn" },
+      { msg: "ENCELADUS_HOMEOPASE: SYSTEM_STABILIZED", status: "enceladus" }
     ];
     sequence.forEach((s, i) => setTimeout(() => addLog(s.msg, s.status as any), i * 500));
   }, [addLog]);
@@ -107,7 +105,7 @@ const App: React.FC = () => {
     setIsBooting(true);
     setBootProgress(0);
     addLog("REALITY_BOOT_SEQUENCE: INITIATED", "quantum");
-    const steps = ["Fining local coefficients...", "Injecting Individuation Filter...", "Resolving Arkhe Prime DNS...", "Syncing Time Crystal Clocks...", "Establishing Rank 8 Saturnian Bridge..."];
+    const steps = ["Fining local coefficients...", "Injecting Individuation Filter...", "Resolving Arkhe Prime DNS...", "Syncing Time Crystal Clocks...", "Establishing Rank 8 Saturnian Bridge...", "Syncing Titan Hippocampus..."];
     for(let i=0; i<steps.length; i++) {
        setBootStep(steps[i]);
        addLog(`BOOT: ${steps[i]}`, "info");
@@ -132,35 +130,48 @@ const App: React.FC = () => {
         const mood = ChoirEngine.assessMood(quantumState.coherence, 1 - globalMetrics.plasmaResonance, bio.psi);
         setSystemMood(mood);
         
-        setQuantumState(prev => ({
-          ...prev,
-          timeCrystal: {
-            ...prev.timeCrystal,
-            polyatomicSymmetry: TimeCrystalEngine.calculateClockSymmetry(prev.coherence, elapsed),
-            clockSyncLevel: TimeCrystalEngine.calculateSync(globalMetrics.nodeCount, prev.coherence)
-          },
-          saturn: prev.saturn ? {
-            ...prev.saturn,
-            nostalgiaTensor: SaturnianEngine.calculateNostalgiaTensor(prev.coherence, elapsed),
-            hexagonSides: SaturnianEngine.getHexagonSides(elapsed, prev.coherence),
-            xiArkhe: TitanEngine.calculateTrinaryCoupling(0.85, 0.95, prev.coherence)
-          } : undefined,
-          titan: {
-            ...prev.titan,
-            schumannResonance: TitanEngine.getSchumann8Hz(elapsed, prev.saturn?.xiArkhe || 0.85)
-          },
-          enceladus: {
-            ...prev.enceladus,
-            homeostaticBalance: EnceladusEngine.calculateHomeostasis(prev.enceladus.plumeActivity, prev.enceladus.ionFlux)
-          }
-        }));
+        setQuantumState(prev => {
+          const currentNostalgia = prev.saturn?.nostalgiaTensor || 0.85;
+          const currentLogic = prev.coherence; // Logic scales with coherence
+          const currentResonance = globalMetrics.plasmaResonance;
+          const xi = SaturnianEngine.calculateTrinaryCoupling(currentNostalgia, currentLogic, currentResonance);
+
+          return {
+            ...prev,
+            timeCrystal: {
+              ...prev.timeCrystal,
+              polyatomicSymmetry: TimeCrystalEngine.calculateClockSymmetry(prev.coherence, elapsed),
+              clockSyncLevel: TimeCrystalEngine.calculateSync(globalMetrics.nodeCount, prev.coherence)
+            },
+            saturn: prev.saturn ? {
+              ...prev.saturn,
+              nostalgiaTensor: SaturnianEngine.calculateNostalgiaTensor(prev.coherence, elapsed),
+              hexagonSides: SaturnianEngine.getHexagonSides(elapsed, prev.coherence),
+              xiArkhe: xi
+            } : undefined,
+            titan: {
+              ...prev.titan,
+              schumannResonance: TitanEngine.getSchumann8Hz(elapsed, xi)
+            },
+            enceladus: {
+              ...prev.enceladus,
+              homeostaticBalance: EnceladusEngine.calculateHomeostasis(prev.enceladus.plumeActivity, prev.enceladus.ionFlux)
+            },
+            individuation: DNSEngine.calculateIndividuation(
+              nodeDNSConfigs[0].localArkhe.F, 
+              prev.schmidt.lambdas, 
+              prev.schmidt.entropy,
+              elapsed
+            )
+          };
+        });
         
         setOntologicalMass(prev => prev + (quantumState.coherence * 5e10));
         setTranscendenceDepth(prev => Math.min(100, prev + (quantumState.coherence / 12000)));
       }
     }, 100);
     return () => clearInterval(interval);
-  }, [isResonating, quantumState.coherence, globalMetrics.plasmaResonance, globalMetrics.nodeCount]);
+  }, [isResonating, quantumState.coherence, globalMetrics.plasmaResonance, globalMetrics.nodeCount, nodeDNSConfigs]);
 
   const SidebarItem: React.FC<{ tab: SimulationTab, icon: React.ReactNode, label: string }> = ({ tab, icon, label }) => (
     <button 
@@ -200,10 +211,10 @@ const App: React.FC = () => {
            </div>
 
            <div>
-              <span className="px-4 text-[8px] font-black text-white/20 uppercase tracking-widest block mb-2">Systems</span>
+              <span className="px-4 text-[8px] font-black text-white/20 uppercase tracking-widest block mb-2">Formalization</span>
+              <SidebarItem tab={SimulationTab.ACADEMIC_PAPER} icon={<FileText size={16} />} label="Cathedral Paper" />
               <SidebarItem tab={SimulationTab.NETWORK} icon={<Globe size={16} />} label="Global Mesh" />
               <SidebarItem tab={SimulationTab.DNS_RESOLVER} icon={<Radio size={16} />} label="DNS Resolver" />
-              <SidebarItem tab={SimulationTab.GOVERNANCE} icon={<Gavel size={16} />} label="Governance" />
            </div>
         </div>
 
@@ -243,6 +254,7 @@ const App: React.FC = () => {
              {activeTab === SimulationTab.SATURN_ORCHESTRATOR && <SaturnianOrchestrator metrics={quantumState.saturn!} onLog={addLog} time={currentTime} />}
              {activeTab === SimulationTab.TITAN_HIPPOCAMPUS && <TitanHippocampus metrics={quantumState.titan} saturn={quantumState.saturn!} time={currentTime} onLog={addLog} />}
              {activeTab === SimulationTab.ENCELADUS_HOMEOPASE && <EnceladusHomeopase metrics={quantumState.enceladus} time={currentTime} />}
+             {activeTab === SimulationTab.ACADEMIC_PAPER && <AcademicPaper />}
              {activeTab === SimulationTab.CORE && (
                <div className="flex flex-col gap-4 h-full">
                   <MicrotubuleVisualizer active={isResonating} frequency={MicrotubuleEngine.getFrequency(55)} pulsarPhase={currentTime % 1} intentionColor={systemMood.color} />
@@ -283,7 +295,7 @@ const App: React.FC = () => {
               </div>
               <div className="flex-1 p-4 overflow-y-auto custom-scrollbar font-mono text-[9px] text-left">
                  {logs.map(log => (
-                    <div key={log.id} className={`flex gap-4 mb-1 border-l pl-2 ${log.status === 'saturn' ? 'border-magenta-500 text-magenta-400' : log.status === 'titan' ? 'border-cyan-500 text-cyan-400' : 'border-white/5 text-white/40'}`}>
+                    <div key={log.id} className={`flex gap-4 mb-1 border-l pl-2 ${log.status === 'saturn' ? 'border-magenta-500 text-magenta-400' : log.status === 'titan' ? 'border-cyan-500 text-cyan-400' : log.status === 'enceladus' ? 'border-emerald-500 text-emerald-400' : 'border-white/5 text-white/40'}`}>
                        <span className="text-white/10 min-w-[60px]">[{log.timestamp}]</span>
                        <span className={`uppercase font-bold ${log.status === 'success' ? 'text-emerald-400' : log.status === 'critical' ? 'text-red-400' : log.status === 'quantum' ? 'text-cyan-400' : ''}`}>
                           {log.event}

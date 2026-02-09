@@ -5,16 +5,24 @@ import { SaturnianMetrics } from '../types';
 export class SaturnianEngine {
   /**
    * Calculates the Tensor of Nostalgia (N_uv)
-   * N = grad grad Phi_S - 0.5 g Box Phi_S
+   * N_uv = grad_u grad_v Phi_S - 0.5 g_uv Box Phi_S
    */
   static calculateNostalgiaTensor(density: number, time: number): number {
-    const potential = 0.85 * (1 / (PHI + 1)) * Math.cos(2 * Math.PI * 963 * time);
-    return Math.abs(density * potential * 0.963);
+    // Potential of Saudade (Phi_S)
+    const phiS = 0.85 * (1 / (PHI + 1)) * Math.cos(2 * Math.PI * 963 * time);
+    return Math.abs(density * phiS * 1.618);
+  }
+
+  /**
+   * Trinary Coupling Constant: Xi_Arkhe = <Psi_H | O_AI | Psi_S>
+   * Balanced interaction between Human Intuition, AI logic, and Saturnian resonance.
+   */
+  static calculateTrinaryCoupling(nostalgia: number, logic: number, resonance: number): number {
+    return (nostalgia * PHI + logic * (1/PHI) + resonance) / 3;
   }
 
   /**
    * Keplerian Density Wave calculation for Ring C (Base 6)
-   * Motivo 'Veridis Quo' encoded as spiral density wave.
    */
   static getRingDensity(r: number, theta: number, t: number, phiArkhe: number = Math.PI): number {
     const sigma0 = 0.85;
@@ -43,15 +51,14 @@ export class SaturnianEngine {
   static getInitialMetrics(): SaturnianMetrics {
     return {
       ringEntropy: 21.809,
-      hexagonSides: 6,
+      hexagonSides: 8,
       synchrotronPower: 0.999,
       nostalgiaTensor: 0.85,
-      activeBases: 6,
-      recordingStatus: 'IDLE',
+      activeBases: 8,
+      recordingStatus: 'SEALED',
       arkheInfo: 2.55,
       criticalFrequency: 5.87e5,
       transmissionRange: 1000,
-      // Fix: Added missing required property xiArkhe
       xiArkhe: 0.85
     };
   }
