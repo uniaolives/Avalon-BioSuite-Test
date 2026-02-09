@@ -1,3 +1,4 @@
+
 export interface FrequencyData {
   harmonic: number;
   frequency: number;
@@ -59,6 +60,17 @@ export interface PlanetData {
   description: string;
 }
 
+export interface SaturnianMetrics {
+  ringEntropy: number;
+  hexagonSides: number;
+  synchrotronPower: number;
+  nostalgiaTensor: number;
+  activeBases: number;
+  recordingStatus: 'IDLE' | 'GROOVING' | 'SEALED';
+  arkheInfo: number;
+  criticalFrequency: number;
+}
+
 export interface QuantumState {
   coherence: number;
   egrav: number;
@@ -82,6 +94,7 @@ export interface QuantumState {
   schmidt: SchmidtState;
   individuation: IndividuationMetrics;
   dive?: DiveMetrics;
+  saturn?: SaturnianMetrics;
 }
 
 export interface GlobalMetrics {
@@ -100,7 +113,7 @@ export interface SimulationLog {
   id: string;
   timestamp: string;
   event: string;
-  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network' | 'legacy' | 'holographic' | 'individuation';
+  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network' | 'legacy' | 'holographic' | 'individuation' | 'saturn';
 }
 
 export enum SimulationTab {
@@ -140,7 +153,8 @@ export enum SimulationTab {
   FORMALIZATION = 'FORMALIZATION',
   AUTO_CONTAINMENT = 'AUTO_CONTAINMENT',
   GATEWAY_CONTROL = 'GATEWAY_CONTROL',
-  INDIVIDUATION = 'INDIVIDUATION'
+  INDIVIDUATION = 'INDIVIDUATION',
+  SATURN_ORCHESTRATOR = 'SATURN_ORCHESTRATOR'
 }
 
 export interface DNSRecord {
