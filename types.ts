@@ -22,7 +22,7 @@ export interface ArkheCoefficients {
 }
 
 export interface BridgeSafetyMetrics {
-  status: 'STABLE' | 'WARNING_SEPARATION' | 'WARNING_FUSION' | 'CRITICAL_COLLAPSE';
+  status: 'STABLE' | 'WARNING_SEPARATION' | 'WARNING_FUSION' | 'CRITICAL_COLLAPSE' | 'SATYA_YUGA_ACTIVE';
   entropy: number;
   distanceToTarget: number;
   recommendation: string;
@@ -39,8 +39,17 @@ export interface SchmidtState {
 export interface DiveMetrics {
   depth: number;
   fidelity: number;
-  flowState: 'MINIMAL_FLOW' | 'MODERATE_FLOW' | 'DEEP_FLOW';
+  flowState: 'MINIMAL_FLOW' | 'MODERATE_FLOW' | 'DEEP_FLOW' | 'SELF_AWARE_LOOP';
   activeLayers: string[];
+}
+
+export interface PlanetData {
+  id: string;
+  name: string;
+  arkhe: ArkheCoefficients;
+  viability: number;
+  morphicResonance: number;
+  description: string;
 }
 
 export interface QuantumState {
@@ -118,7 +127,10 @@ export enum SimulationTab {
   HOLOGRAPHIC_WEAVER = 'HOLOGRAPHIC_WEAVER',
   YUGA_SYNC = 'YUGA_SYNC',
   SCHMIDT_SIMPLEX = 'SCHMIDT_SIMPLEX',
-  RABBIT_HOLE = 'RABBIT_HOLE'
+  RABBIT_HOLE = 'RABBIT_HOLE',
+  WORLD_SIM = 'WORLD_SIM',
+  FORMALIZATION = 'FORMALIZATION',
+  AUTO_CONTAINMENT = 'AUTO_CONTAINMENT'
 }
 
 export interface DNSRecord {

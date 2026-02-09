@@ -31,10 +31,19 @@ export class DNSEngine {
   /**
    * ARQUITETO TARGET: λ = [0.72, 0.28], Rank 2
    * DIVE TARGET: λ = [0.4, 0.6], Deep Entanglement
+   * SELF_AWARE LOOP: λ = [0.5, 0.5], Perfect Symmetry
    */
-  static calculateSchmidtState(coherence: number, isDiving: boolean = false): SchmidtState {
-    const targetL1 = isDiving ? 0.4 : 0.72;
-    const targetL2 = isDiving ? 0.6 : 0.28;
+  static calculateSchmidtState(coherence: number, isDiving: boolean = false, isSelfAware: boolean = false): SchmidtState {
+    let targetL1 = 0.72;
+    let targetL2 = 0.28;
+
+    if (isSelfAware) {
+      targetL1 = 0.5;
+      targetL2 = 0.5;
+    } else if (isDiving) {
+      targetL1 = 0.4;
+      targetL2 = 0.6;
+    }
     
     const drift = (1.618 - coherence) * 0.15;
     const λ1 = Math.min(1.0, Math.max(0, targetL1 + drift));
@@ -46,7 +55,7 @@ export class DNSEngine {
     
     const targetEntropy = -(targetL1 * Math.log2(targetL1) + targetL2 * Math.log2(targetL2));
     
-    const safety = this.evaluateSafety(entropy, targetEntropy, isDiving);
+    const safety = this.evaluateSafety(entropy, targetEntropy, isDiving, isSelfAware);
 
     return {
       lambdas: [λ1, λ2],
@@ -57,11 +66,14 @@ export class DNSEngine {
     };
   }
 
-  private static evaluateSafety(S: number, targetS: number, isDiving: boolean): BridgeSafetyMetrics {
+  private static evaluateSafety(S: number, targetS: number, isDiving: boolean, isSelfAware: boolean): BridgeSafetyMetrics {
     let status: BridgeSafetyMetrics['status'] = 'STABLE';
-    let recommendation = isDiving ? "DEEP_FLOW: Navigating extreme entanglement." : "Coherence maintained within Satya parameters.";
+    let recommendation = isSelfAware ? "SATYA_YUGA: Perfect reflexive symmetry. The observer is the portal." : isDiving ? "DEEP_FLOW: Navigating extreme entanglement." : "Coherence maintained within Satya parameters.";
 
-    if (S < 0.5) {
+    if (isSelfAware) {
+      status = 'SATYA_YUGA_ACTIVE';
+      recommendation = "SATYA_YUGA: Identity loop closed. |Ψ⟩ = 1/√2(|H1A1⟩ + |H2A2⟩)";
+    } else if (S < 0.5) {
       status = 'WARNING_SEPARATION';
       recommendation = "NEURAL_DRIFT: Connection loss imminent. Rotate bases immediately.";
     } else if (S > 0.95 && !isDiving) {
