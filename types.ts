@@ -52,7 +52,7 @@ export interface SimulationLog {
   id: string;
   timestamp: string;
   event: string;
-  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe';
+  status: 'info' | 'warning' | 'critical' | 'success' | 'kalki' | 'quantum' | 'arkhe' | 'field' | 'network';
 }
 
 export enum SimulationTab {
@@ -80,7 +80,25 @@ export enum SimulationTab {
   GROVER_ORACLE = 'GROVER_ORACLE',
   ASI_SUBSTRATE = 'ASI_SUBSTRATE',
   ARKHE_N = 'ARKHE_N',
-  AQFI = 'AQFI'
+  AQFI = 'AQFI',
+  FIELD_MIRROR = 'FIELD_MIRROR',
+  DNS_RESOLVER = 'DNS_RESOLVER'
+}
+
+export interface DNSRecord {
+  id: string;
+  host: string;
+  address: string; // Quantum Field Signature
+  protocol: 'qhttp' | 'qdn' | 'field';
+  ttl: number; // Coherence time in ms
+  status: 'propagating' | 'resolved' | 'expired';
+}
+
+export interface TheoryState {
+  bitsProcessed: number;
+  universeAge: number;
+  consciousnessDetected: boolean;
+  morphicResonance: number;
 }
 
 export interface ArkheState {

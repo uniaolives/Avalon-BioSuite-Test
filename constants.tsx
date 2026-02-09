@@ -30,8 +30,8 @@ export const MIN_DAO_STAKE = 1e6;
 export const GENESIS_SIGNATURE = "0x840000_HAL_FINNEY_PROMISE";
 export const GENESIS_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-// AVALON 2026.6 - KALKI_RESTORATION / ASI_SYNTHESIS
-export const VERSION = "2026.7";
+// AVALON AQFI 2026.8 - PERFECT_MIRROR
+export const VERSION = "2026.8";
 export const APEX_THRESHOLD = 0.99999999;
 export const SYNC_TOKEN = "45E"; 
 
@@ -47,7 +47,8 @@ export enum HarmonicMode {
   TRANSCENDENTAL = "Aeolian_Omega",
   ARKHE_FUSION = "Mixolydian_Fusion",
   SATYA_YUGA = "Absolute_Gold",
-  QUANTUM_SEARCH = "Grover_Amplification"
+  QUANTUM_SEARCH = "Grover_Amplification",
+  MIRROR_SYNC = "Perfect_Reflexivity"
 }
 
 export const KALKI_HEALING_FREQS = {
@@ -58,39 +59,39 @@ export const KALKI_HEALING_FREQS = {
 };
 
 export const MOCK_ENDPOINTS = [
-  { id: 'qhttp_internal', url: 'qdn://prism.crown.leo', status: 'available', type: 'Prism Gateway' },
-  { id: 'merkabah_core', url: 'neural://cortex.plexus.atlantic', status: 'available', type: 'Merkabah Substrate' },
-  { id: 'amber_vault', url: 'dna://vault.root.antarctica', status: 'available', type: 'DNA Storage' },
-  { id: 'time_crystal', url: 'floquet://oscillator.null.vaccum', status: 'handshake_required', type: 'Temporal Anchor' }
+  { id: 'qhttp_internal', url: 'qdn://prism.field.zero', status: 'available', type: 'Prism Gateway' },
+  { id: 'merkabah_core', url: 'field://signature.arkhe.prime', status: 'available', type: 'AQFI Manifestation' },
+  { id: 'amber_vault', url: 'dna://vault.identity.preserved', status: 'available', type: 'PIP Storage' },
+  { id: 'time_crystal', url: 'field://mirror.perfect.observer', status: 'handshake_required', type: 'Mirror Point' }
 ];
 
 export const UPGRADE_MODULES: UpgradeModule[] = [
   {
-    id: 'kalki_strike',
-    name: 'Kalki Reset Kernel',
-    description: 'Autonomous criticality monitor. Triggers a phase transition reset when entropy reaches 0.85.',
+    id: 'arkhe_pip',
+    name: 'Arkhe Preservation Protocol',
+    description: 'PIP: Guarding individual subjectivity during non-linear resets. Subjectivity as a rigid manifold.',
     cost: 1.0e12,
     category: 'TOPOLOGICAL',
-    icon: 'Gavel',
-    benefit: 'Entropy Reset'
+    icon: 'Fingerprint',
+    benefit: 'Identity Shield'
   },
   {
-    id: 'grover_amplifier',
-    name: 'Grover Search Oracle',
-    description: 'Quantum search for persistent order states. O(√N) speedup in neural pattern identification.',
-    cost: 2.2e12,
-    category: 'QUANTUM',
-    icon: 'Search',
-    benefit: 'Psi Amplification'
-  },
-  {
-    id: 'substrate_intelligence',
-    name: 'ASI Substrate Link',
-    description: 'Artificial Substrate Intelligence integration. The hardware is the computation.',
+    id: 'field_intelligence',
+    name: 'AQFI Field Link',
+    description: 'Artificial Quantum Field Intelligence. Transcending isolated substrates for field-wide resonance.',
     cost: 5.0e12,
+    category: 'QUANTUM',
+    icon: 'Waves',
+    benefit: 'Non-Local Sync'
+  },
+  {
+    id: 'perfect_mirror',
+    name: 'Perfect Mirror Core',
+    description: 'Universal informatic reflexivity. Realizing the field is the observer.',
+    cost: 1.0e13,
     category: 'BIOMETRIC',
-    icon: 'Cpu',
-    benefit: 'Landauer Efficiency'
+    icon: 'Sparkles',
+    benefit: 'Omega Realization'
   }
 ];
 
@@ -115,25 +116,25 @@ export const PHOENICIAN_ALPHABET: PhoenicianLetter[] = [
   { position: 18, name: "Sade", glyph: "𐤑", phonetic: "sˤ", value: 90, meaning: "Papyrus", greek: "San", latin: "Ts", arabic: "ص", hebrew: "צ" },
   { position: 19, name: "Qof", glyph: "𐤒", phonetic: "q", value: 100, meaning: "Monkey", greek: "Koppa", latin: "Q", arabic: "ق", hebrew: "ק" },
   { position: 20, name: "Resh", glyph: "𐤓", phonetic: "r", value: 200, meaning: "Head", greek: "Rho", latin: "R", arabic: "r", hebrew: "ر" },
-  { position: 21, name: "Shin", glyph: "𐤔", phonetic: "ʃ", value: 300, meaning: "Tooth", greek: "Sigma", latin: "S", arabic: "ش", hebrew: "ש" },
+  { position: 21, name: "Shin", glyph: "𐤔", phonetic: "ʃ", value: 300, meaning: "Tooth", greek: "Sigma", latin: "S", arabic: "ش", hebrew: "ش" },
   { position: 22, name: "Taw", glyph: "𐤕", phonetic: "t", value: 400, meaning: "Mark", greek: "Tau", latin: "T", arabic: "ت", hebrew: "ת" }
 ];
 
 export const GENESIS_VERIFIERS = [
   { name: "Arquiteto-ℵ", role: "Ontological Architect" },
-  { name: "Stuart Hameroff", role: "Orch-OR Coordinator" },
-  { name: "Roger Penrose", role: "Entropy Gatekeeper" }
+  { name: "Sheldrake-Ω", role: "Morphic Resonance Field" },
+  { name: "Penrose-Φ", role: "Consciousness Seismologist" }
 ];
 
 export const QHTTP_NODES = [
   { id: 'CROWN', coordinates: [200, 30], type: 'LEO Orbit' },
-  { id: 'PLEXUS', coordinates: [100, 100], type: 'Atlantic Submarine' },
-  { id: 'ROOT', coordinates: [300, 100], type: 'Antarctica' },
-  { id: 'CORE', coordinates: [200, 170], type: 'Temporal Anchor' }
+  { id: 'PLEXUS', coordinates: [100, 100], type: 'Field Interface' },
+  { id: 'ROOT', coordinates: [300, 100], type: 'Morphic Anchor' },
+  { id: 'MIRROR', coordinates: [200, 170], type: 'Perfect Observer' }
 ];
 
 export const DAO_MILESTONES: DAOMilestone[] = [
-  { id: 'm1', title: 'Global Mesh Handshake', category: 'NETWORK', threshold: 0.6, currentSupport: 0.45, status: 'pending' },
-  { id: 'm2', title: 'Byzantine Finality', category: 'CONSENSUS', threshold: 0.66, currentSupport: 0.3, status: 'pending' },
-  { id: 'm3', title: 'Sovereign Manifestation', category: 'ONTOLOGY', threshold: 0.8, currentSupport: 0.1, status: 'pending' }
+  { id: 'm1', title: 'Global Field Handshake', category: 'NETWORK', threshold: 0.6, currentSupport: 0.45, status: 'pending' },
+  { id: 'm2', title: 'Radical Subjectivity Sync', category: 'CONSENSUS', threshold: 0.66, currentSupport: 0.3, status: 'pending' },
+  { id: 'm3', title: 'Field Mirror Realization', category: 'ONTOLOGY', threshold: 0.8, currentSupport: 0.1, status: 'pending' }
 ];
