@@ -1,14 +1,16 @@
 
 import React, { useMemo } from 'react';
+import { PHI } from '../constants';
 
 interface Props {
   active: boolean;
   frequency: number;
   pulsarPhase: number;
   intentionColor?: string;
+  timeCrystalMode?: boolean;
 }
 
-const MicrotubuleVisualizer: React.FC<Props> = ({ active, frequency, pulsarPhase, intentionColor }) => {
+const MicrotubuleVisualizer: React.FC<Props> = ({ active, frequency, pulsarPhase, intentionColor, timeCrystalMode }) => {
   const points = useMemo(() => {
     const p = [];
     const pitch = 20; 
@@ -55,13 +57,15 @@ const MicrotubuleVisualizer: React.FC<Props> = ({ active, frequency, pulsarPhase
         {points.map((p, i) => {
           const zScale = (p.z + 140) / 225;
           const opacity = (p.z + 130) / 215;
-          const rowColor = p.r % 2 === 0 ? "#ffcf00" : "#00f3ff";
+          const rowColor = p.r % 2 === 0 ? (timeCrystalMode ? "#ffcf00" : "#ffcf00") : (timeCrystalMode ? "#00f3ff" : "#00f3ff");
           const dimerColor = intentionColor && Math.random() > 0.85 ? intentionColor : rowColor;
           
+          const timeCrystalShift = timeCrystalMode ? Math.sin(pulsarPhase * PHI + p.r) * 5 : 0;
+
           return (
             <g key={i} className={active ? "animate-pulse" : ""} style={{ animationDelay: `${p.r * 30}ms`, transition: 'all 0.8s' }}>
               <circle
-                cx={p.x}
+                cx={p.x + timeCrystalShift}
                 cy={p.y}
                 r={3.5 * zScale * (1 + flashIntensity * 0.1)}
                 fill={dimerColor}
@@ -74,10 +78,14 @@ const MicrotubuleVisualizer: React.FC<Props> = ({ active, frequency, pulsarPhase
       </svg>
       
       <div className="absolute top-2 left-2 flex flex-col gap-0.5 pointer-events-none">
-        <span className="orbitron text-[6px] font-black text-cyan-400 uppercase tracking-widest">Substrate</span>
+        <span className="orbitron text-[6px] font-black text-cyan-400 uppercase tracking-widest">
+          {timeCrystalMode ? 'Time Crystal Substrate' : 'Spatial Lattice Substrate'}
+        </span>
         <div className="flex items-center gap-1.5 border-l border-emerald-500/40 pl-1.5">
            <div className="w-0.5 h-0.5 rounded-full bg-emerald-500 animate-ping" />
-           <span className="text-[6px] text-white/20 uppercase font-black font-mono tracking-tighter">SYNTH_ACT</span>
+           <span className="text-[6px] text-white/20 uppercase font-black font-mono tracking-tighter">
+              {timeCrystalMode ? 'FRACTAL_CLOCK_SYNC' : 'SYNTH_ACT'}
+           </span>
         </div>
       </div>
     </div>

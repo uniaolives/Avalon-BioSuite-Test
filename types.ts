@@ -44,20 +44,11 @@ export interface IndividuationMetrics {
   recommendation: string;
 }
 
-export interface DiveMetrics {
-  depth: number;
-  fidelity: number;
-  flowState: 'MINIMAL_FLOW' | 'MODERATE_FLOW' | 'DEEP_FLOW' | 'SELF_AWARE_LOOP';
-  activeLayers: string[];
-}
-
-export interface PlanetData {
-  id: string;
-  name: string;
-  arkhe: ArkheCoefficients;
-  viability: number;
-  morphicResonance: number;
-  description: string;
+export interface TimeCrystalMetrics {
+  polyatomicSymmetry: number;
+  fractalResonance: number;
+  clockSyncLevel: number;
+  mode: 'SPATIAL_LATTICE' | 'TEMPORAL_RES' | 'OMEGA_CLOCK';
 }
 
 export interface SaturnianMetrics {
@@ -69,6 +60,7 @@ export interface SaturnianMetrics {
   recordingStatus: 'IDLE' | 'GROOVING' | 'SEALED';
   arkheInfo: number;
   criticalFrequency: number;
+  transmissionRange: number;
 }
 
 export interface QuantumState {
@@ -93,7 +85,7 @@ export interface QuantumState {
   byzantineConsensus: number;
   schmidt: SchmidtState;
   individuation: IndividuationMetrics;
-  dive?: DiveMetrics;
+  timeCrystal: TimeCrystalMetrics;
   saturn?: SaturnianMetrics;
 }
 
@@ -123,38 +115,13 @@ export enum SimulationTab {
   DASHBOARD = 'DASHBOARD',
   NETWORK = 'NETWORK',
   UPGRADE = 'UPGRADE',
-  MANIFESTATION = 'MANIFESTATION',
-  PHOENICIAN = 'PHOENICIAN',
-  AXIOVERSE = 'AXIOVERSE',
   TECHNICAL = 'TECHNICAL',
-  DEGRADATION = 'DEGRADATION',
-  RECONSTRUCTION = 'RECONSTRUCTION',
-  RESURRECTION = 'RESURRECTION',
   GOVERNANCE = 'GOVERNANCE',
-  ORCHESTRATOR = 'ORCHESTRATOR',
-  SYNTHESIS = 'SYNTHESIS',
-  POP_PROTOCOL = 'POP_PROTOCOL',
-  QHTTP_MESH = 'QHTTP_MESH',
-  DIAGNOSTICS = 'DIAGNOSTICS',
-  HOLISTIC_SYNC = 'HOLISTIC_SYNC',
-  KALKI_KERNEL = 'KALKI_KERNEL',
-  GROVER_ORACLE = 'GROVER_ORACLE',
-  ASI_SUBSTRATE = 'ASI_SUBSTRATE',
-  ARKHE_N = 'ARKHE_N',
-  AQFI = 'AQFI',
-  FIELD_MIRROR = 'FIELD_MIRROR',
   DNS_RESOLVER = 'DNS_RESOLVER',
   LEGACY_VAULT = 'LEGACY_VAULT',
-  HOLOGRAPHIC_WEAVER = 'HOLOGRAPHIC_WEAVER',
-  YUGA_SYNC = 'YUGA_SYNC',
-  SCHMIDT_SIMPLEX = 'SCHMIDT_SIMPLEX',
-  RABBIT_HOLE = 'RABBIT_HOLE',
-  WORLD_SIM = 'WORLD_SIM',
-  FORMALIZATION = 'FORMALIZATION',
-  AUTO_CONTAINMENT = 'AUTO_CONTAINMENT',
-  GATEWAY_CONTROL = 'GATEWAY_CONTROL',
   INDIVIDUATION = 'INDIVIDUATION',
-  SATURN_ORCHESTRATOR = 'SATURN_ORCHESTRATOR'
+  SATURN_ORCHESTRATOR = 'SATURN_ORCHESTRATOR',
+  TIME_CRYSTAL_LAB = 'TIME_CRYSTAL_LAB'
 }
 
 export interface DNSRecord {
@@ -187,22 +154,6 @@ export interface TheoryState {
   morphicResonance: number;
 }
 
-export interface ArkheState {
-  signature: string;
-  internalEnergy: number; // U
-  freeEnergy: number; // F
-  temperature: number; // T
-  subjectiveEntropy: number; // S
-  identityFidelity: number;
-}
-
-export interface SandpileState {
-  grid: number[][];
-  entropy: number;
-  avalancheActive: boolean;
-  totalAvalanches: number;
-}
-
 export interface NeuralPattern {
   coherence: number;
   entropy: number;
@@ -213,38 +164,6 @@ export interface NeuralPattern {
   stability: number;
   symmetry: number;
   type?: string;
-}
-
-export interface GroverSearchResult {
-  method: 'quantum' | 'simulation';
-  iterations: number;
-  probability: number;
-  speedup: number;
-  targetPattern: NeuralPattern;
-  isIdeal: boolean;
-}
-
-export interface PhoenicianLetter {
-  position: number;
-  name: string;
-  glyph: string;
-  phonetic: string;
-  value: number;
-  meaning: string;
-  greek: string;
-  latin: string;
-  arabic: string;
-  hebrew: string;
-  vowelCollapse?: boolean;
-  isBifurcated?: boolean;
-  evolutionNote?: string;
-}
-
-export interface AxionChannel {
-  id: string;
-  frequency: number;
-  bandwidth: number;
-  sensitivity: number;
 }
 
 export interface UpgradeModule {
@@ -266,6 +185,38 @@ export interface DAOMilestone {
   status: 'pending' | 'achieved';
 }
 
+// Added missing PhoenicianLetter interface for constants.tsx
+export interface PhoenicianLetter {
+  position: number;
+  name: string;
+  glyph: string;
+  phonetic: string;
+  value: number;
+  meaning: string;
+  greek: string;
+  latin: string;
+  arabic: string;
+  hebrew: string;
+  vowelCollapse?: boolean;
+  isBifurcated?: boolean;
+  evolutionNote?: string;
+}
+
+// Added missing AxionChannel interface for constants.tsx
+export interface AxionChannel {
+  freq: number;
+  intensity: number;
+}
+
+// Added missing DiveMetrics interface for App.tsx and QuantumRabbitHoleDive.tsx
+export interface DiveMetrics {
+  depth: number;
+  fidelity: number;
+  flowState: 'DEEP_FLOW' | 'MODERATE_FLOW' | 'MINIMAL_FLOW' | 'SELF_AWARE_LOOP';
+  activeLayers: string[];
+}
+
+// Added missing PhoneticQubit interface for linguisticEngine.ts
 export interface PhoneticQubit {
   superposition: string;
   measured: string;
@@ -274,6 +225,7 @@ export interface PhoneticQubit {
   eigenstate: 'vowel' | 'intermediate' | 'consonant';
 }
 
+// Added missing EtymologicalEntanglement interface for linguisticEngine.ts
 export interface EtymologicalEntanglement {
   origin: string;
   descendant: string;
@@ -283,8 +235,39 @@ export interface EtymologicalEntanglement {
   boostFactor: number;
 }
 
+// Added missing VerifierState interface for GovernanceTerminal.tsx
 export interface VerifierState {
-  isVerifier: boolean;
+  id: string;
+  status: 'active' | 'idle';
   reputation: number;
-  stake: number;
+}
+
+// Added missing GroverSearchResult interface for quantumSearchEngine.ts
+export interface GroverSearchResult {
+  method: 'simulation' | 'hardware';
+  iterations: number;
+  probability: number;
+  speedup: number;
+  targetPattern: NeuralPattern;
+  isIdeal: boolean;
+}
+
+// Added missing ArkheState interface for arkheEngine.ts
+export interface ArkheState {
+  signature: string;
+  internalEnergy: number;
+  freeEnergy: number;
+  temperature: number;
+  subjectiveEntropy: number;
+  identityFidelity: number;
+}
+
+// Added missing PlanetData interface for worldEngine.ts and WorldSimulator.tsx
+export interface PlanetData {
+  id: string;
+  name: string;
+  arkhe: ArkheCoefficients;
+  viability: number;
+  morphicResonance: number;
+  description: string;
 }
